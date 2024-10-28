@@ -1,0 +1,2 @@
+# blog
+duminghong's blog
