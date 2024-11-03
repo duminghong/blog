@@ -10,8 +10,8 @@ dayjs.extend(timezone);
 dayjs.extend(utc);
 
 const dirs = [
-  path.join(__dirname, '../docs/notes'),
-  path.join(__dirname, '../docs/courses')
+  path.join(process.cwd(), 'docs/notes'),
+  path.join(process.cwd(), 'docs/courses')
 ];
 
 function getFeatures(count = 3) {
