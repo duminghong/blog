@@ -1,0 +1,18 @@
+:root {
+    --vp-home-hero-name-color: transparent;
+    --vp-home-hero-name-background: -webkit-linear-gradient(120deg, #ffa641, #e70217);
+
+    --vp-c-brand-1: #e70217;
+    --vp-button-brand-bg: #e70217;
+    --vp-button-brand-hover-bg: #ff2e43;
+}
+
+.group:has([role='button']) .VPSidebarItem.level-0 h2.text{
+    font-size: 16px;
+}
+.group:has([role='button']) .VPSidebarItem.level-0 .items {
+    /* padding-left: 16px !important; */
+    /* border-left: 1px solid var(--vp-c-divider); */
+    border-radius: 2px;
+    transition: background-color 0.25s;
+}
