@@ -1,8 +1,6 @@
 import { defineConfig } from 'vitepress'
 import { nav, sidebar, algolia } from './configs'
 
-import { getFeatures } from '../scripts/getFeatures';
-
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   // 全局title，标签页标题。若站点有title，则该全局title为后缀。若站点没有title，则该全局title就为整个标题
@@ -91,8 +89,6 @@ export default defineConfig({
 
     // 
     algolia,
-
-    features: getFeatures(),
     // search: {
     //   provider: 'local'
     // },

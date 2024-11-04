@@ -22,9 +22,9 @@
   <script setup>
   import { ref, computed } from 'vue';
   import { useData } from 'vitepress';
+  import featuresData from '../data/features';
   
-  const { theme } = useData();
-  const features = computed(() => theme.value.features || []);
+  const features = ref(featuresData);
 
   const sourceData = ref({
     notes: {

@@ -2,12 +2,14 @@ import fs from 'fs';
 import path from 'path';
 import { marked } from 'marked';
 import dayjs from 'dayjs';
-import timezone from 'dayjs/plugin/timezone';
-import utc from 'dayjs/plugin/utc';
+import { fileURLToPath } from 'url';
 
 // 扩展 dayjs 功能
-dayjs.extend(timezone);
-dayjs.extend(utc);
+// dayjs.extend(timezone);
+// dayjs.extend(utc);
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const dirs = [
   path.join(process.cwd(), 'docs/notes'),
@@ -67,7 +69,8 @@ function getFeatures(count = 3) {
     excerpt = excerpt.replace(/<[^>]+>/g, '').trim();
 
     // 将 mtime 转换为中国时区的时间格式
-    const formattedTime = dayjs(mtime).tz('Asia/Shanghai').format('YYYY-MM-DD HH:mm:ss');
+    // const formattedTime = dayjs(mtime).tz('Asia/Shanghai').format('YYYY-MM-DD HH:mm:ss');
+    const formattedTime = dayjs(mtime).format('YYYY-MM-DD HH:mm:ss');
 
     // 新增 source 字段
     const source = path.basename(dir);
@@ -85,4 +88,16 @@ function getFeatures(count = 3) {
   return features;
 }
 
-export { getFeatures };
+// 创建目标目录
+const targetDir = path.join(process.cwd(), '.vitepress/theme/data');
+if (!fs.existsSync(targetDir)) {
+  fs.mkdirSync(targetDir, { recursive: true });
+}
+
+// 生成 JSON 数据
+const features = getFeatures();
+
+// 写入文件
+const outputPath = path.join(targetDir, 'features.js');
+const fileContent = `export default ${JSON.stringify(features, null, 2)}`;
+fs.writeFileSync(outputPath, fileContent);
