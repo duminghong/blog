@@ -10,7 +10,7 @@ export const nav = [
         text: '🔥 编程导航', 
         items: [
             { 
-                text: '🚀 编程导航', 
+                text: '🚀 教程分享', 
                 link: '/courses/'
             },
             { 
