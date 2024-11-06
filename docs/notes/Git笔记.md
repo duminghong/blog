@@ -1,6 +1,7 @@
 ---
-layout: doc
+layoutClass: doc-layout
 ---
+
 # Git笔记
 
 

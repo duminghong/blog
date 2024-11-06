@@ -1,3 +1,7 @@
+---
+layoutClass: doc-layout
+---
+
 # 小程序canvas文本绘制自动换行、字体加粗简单实现
 
 ## 直接上代码

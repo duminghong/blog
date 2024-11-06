@@ -1,10 +1,7 @@
-<!--
- * @Author: duminghong i@duminghong.com
- * @Date: 2024-11-01 16:08:58
- * @LastEditors: duminghong i@duminghong.com
- * @LastEditTime: 2024-11-01 16:09:13
- * @Description: 
--->
+---
+layoutClass: doc-layout
+---
+
 # 在vue项目中使用vw
 
 ## 安装

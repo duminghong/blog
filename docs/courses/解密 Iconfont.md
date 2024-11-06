@@ -1,3 +1,7 @@
+---
+layoutClass: doc-layout
+---
+
 # 解密 Iconfont
 
 ![ICONFONT](../assets/img/4853363-0e38d9bbc822cbfb.png)

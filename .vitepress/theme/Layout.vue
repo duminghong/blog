@@ -15,5 +15,5 @@
   
   const { page } = useData();
   const { Layout } = DefaultTheme;
-  const isHome = computed(() => unref(page)?.filePath.indexOf('index.md') != -1);
+  const isHome = computed(() => unref(page)?.filePath.indexOf('index.md') != -1 || unref(page)?.filePath.indexOf('about.md') != -1);
 </script>

@@ -1,5 +1,6 @@
 ---
 layout: doc
+layoutClass: doc-layout
 sidebar: false
 ---
 # 教程分享
