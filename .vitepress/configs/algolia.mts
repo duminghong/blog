@@ -2,7 +2,7 @@
 export const algolia = {
     appId: '3CYGHAIACC',
     apiKey: '5a257880b586c824017468b29ba00efb',
-    indexName: 'devsroad',
+    indexName: 'duminghong',
     placeholder: '搜索',
     translations: {
         button: {

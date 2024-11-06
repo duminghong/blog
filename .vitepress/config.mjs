@@ -87,11 +87,10 @@ export default defineConfig({
     // 侧边栏菜单项的配置
     sidebar,
 
-    // 
-    algolia,
-    // search: {
-    //   provider: 'local'
-    // },
+    search: {
+      provider: 'algolia',
+      options: algolia
+    },
     
     // false可防止渲染旁路容器，true会将旁边渲染到右侧，left会将一侧呈现在左侧（默认值: true）
     aside: true,
