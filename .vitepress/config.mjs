@@ -140,12 +140,7 @@ export default defineConfig({
     externalLinkIcon: true,
     
     // 可用于自定义导航栏中语言切换按钮的 aria-label。仅当您使用 i18n 时才使用此选项。（默认值: Change language）
-    langMenuLabel: '切换语言',
-
-    // VitePress支持使用浏览器内置索引进行模糊全文搜索，这得益于minisearch。
-    search: {
-      provider: 'local' // 本地搜索
-    }
+    langMenuLabel: '切换语言'
   },
   
   // 打包完成前钩子（执行一次）
