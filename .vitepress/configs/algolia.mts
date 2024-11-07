@@ -1,7 +1,7 @@
 // 使用 Algolia DocSearch 搜索文档站点
 export const algolia = {
-    appId: '3CYGHAIACC',
-    apiKey: '97f7eba8e30f074fadc787e0a4f86ffc',
+    appId: 'J1I9CQYWBO',
+    apiKey: 'b860f8f7d17344777c9b65aa071c35de',
     indexName: 'duminghong',
     placeholder: '搜索',
     translations: {
