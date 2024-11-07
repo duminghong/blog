@@ -1,15 +1,6 @@
-<!--
- * @Author: duminghong i@duminghong.com
- * @Date: 2024-10-28 12:04:00
- * @LastEditors: duminghong i@duminghong.com
- * @LastEditTime: 2024-11-07 10:45:27
- * @Description: 
--->
 # Blog
 
-duminghong's blog
-
-[网址](https://blog.duminghong.com/)
+[duminghong's blog](https://blog.duminghong.com/)
 
 ## 项目介绍
 
