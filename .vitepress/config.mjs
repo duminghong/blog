@@ -42,6 +42,9 @@ export default defineConfig({
 
   // 主题:默认: true。是否启用深色模式（通过将.dark类添加到<html>元素）。true-启用深色，dark-默认深色，false-禁止切换
   // appearance: true,
+  sitemap: {
+    hostname: 'https://blog.duminghong.com/'
+  },
   
   // 是否使用 Git 获取每个页面的最后更新时间戳。时间戳将包含在每个页面的页面数据中，可通过 useData 访问。
   lastUpdated: true,
