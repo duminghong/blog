@@ -101,3 +101,4 @@ const features = getFeatures();
 const outputPath = path.join(targetDir, 'features.js');
 const fileContent = `export default ${JSON.stringify(features, null, 2)}`;
 fs.writeFileSync(outputPath, fileContent);
+console.log(`Features generated and saved to ${outputPath}`);
