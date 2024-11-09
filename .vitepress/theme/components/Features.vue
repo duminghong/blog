@@ -22,9 +22,7 @@
   <script setup>
   import { ref, computed } from 'vue';
   import { useData } from 'vitepress';
-  import featuresData from '../data/features';
-  
-  const features = ref(featuresData);
+  import { data as features } from '../data/features.data.js'
 
   const sourceData = ref({
     notes: {
@@ -34,6 +32,10 @@
     courses: {
       icon: '🚀',
       name: '教程'
+    },
+    works: {
+      icon: '⛑️',
+      name: '日志'
     },
   })
   </script>

@@ -32,5 +32,11 @@ export const sidebar = generateSidebar([
         scanStartPath: 'courses',
         resolvePath: '/courses/',
         rootGroupText: '教程分享'
+    },
+    {
+        ...vitepressSidebarOptions,
+        scanStartPath: 'works',
+        resolvePath: '/works/',
+        rootGroupText: '工作记录'
     }
 ]);

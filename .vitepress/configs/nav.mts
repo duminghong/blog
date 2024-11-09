@@ -17,6 +17,10 @@ export const nav = [
                 text: '📚 学习笔记', 
                 link: '/notes/'
             },
+            { 
+                text: '⛑️ 工作记录', 
+                link: '/works/'
+            },
         ]
     },
     {

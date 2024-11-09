@@ -14,6 +14,9 @@ hero:
     - theme: alt
       text: 📚 学习笔记
       link: /notes/
+    - theme: alt
+      text: ⛑️ 工作记录
+      link: /works/
 ---
 <!-- 自定义 features 组件，取最近更新的3条文章 -->
 <Features />
