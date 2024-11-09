@@ -1,11 +1,14 @@
 import DefaultTheme from 'vitepress/theme'
 import { useData } from "vitepress";
 import { h, watch } from "vue";
-import './styles/custom.css'
+
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
 
 import Layout from "./Layout.vue";
 import Features from "./components/Features.vue";
 
+import './styles/custom.css'
 
 /**
  * 根据给定的值更新页面样式
@@ -44,6 +47,7 @@ export default {
         return h(Layout, props, {});
     },
     enhanceApp({app, router}){
+        app.use(ElementPlus)
         // 注册自定义全局组件
         app.component('Features', Features)
 

@@ -30,7 +30,9 @@
     "vitepress-sidebar": "^1.29.0"
   },
   "dependencies": {
+    "ant-design-vue": "^4.0.0-rc.6",
     "dayjs": "^1.11.13",
+    "element-plus": "^2.8.7",
     "marked": "^14.1.3"
   }
 }

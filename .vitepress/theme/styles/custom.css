@@ -5,6 +5,9 @@
     --vp-c-brand-1: #e70217;
     --vp-button-brand-bg: #e70217;
     --vp-button-brand-hover-bg: #ff2e43;
+
+    /* element plus */
+    /* --el-color-primary: #e70217; */
 }
 
 .group:has([role='button']) .VPSidebarItem.level-0 h2.text{

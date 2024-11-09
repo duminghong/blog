@@ -187,5 +187,5 @@ export default defineConfig({
   async transformPageData(pageData, { siteConfig }) {
     // 初始化打开新页面就会执行，类似与vue的mounted钩子
     // pageData.title = pageData.title + '**-*！'
-  }
+  },
 })
