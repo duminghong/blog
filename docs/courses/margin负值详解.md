@@ -3,7 +3,7 @@ layoutClass: doc-layout
 ---
 
 # margin负值详解
-
+> margin是CSS外补白，负值可使元素向内收缩，可用于元素定位、列表布局、等高列布局等场景。掌握margin负值，能设计出更灵活的网页布局。
 
 ![MARGIN](../assets/img/4853363-ee8a754f54875841.png)
 
