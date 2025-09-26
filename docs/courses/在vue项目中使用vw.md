@@ -4,7 +4,7 @@ layoutClass: doc-layout
 
 # 在vue项目中使用vw
 
-## 安装
+## 安装 {#安装}
 *   [postcss-import](https://github.com/postcss/postcss-import)
 *   [postcss-url](https://github.com/postcss/postcss-url)
     ```
@@ -24,7 +24,7 @@ layoutClass: doc-layout
     npm i cssnano-preset-advanced --save-dev
     ```
 
-## 配置 ```postcss.config.js```
+## 配置 ```postcss.config.js``` {#配置 postcss.config.js}
 ```
 module.exports = {
   "plugins": {
@@ -56,5 +56,5 @@ module.exports = {
 
 
 -------------------------------------------
-##### 原文：
+## 原文 {#原文}
 [如何在Vue项目中使用vw实现移动端适配](https://www.w3cplus.com/mobile/vw-layout-in-vue.html)

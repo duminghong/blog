@@ -5,7 +5,7 @@ layoutClass: doc-layout
 # Git笔记
 
 
-### 自报家门
+### 自报家门 {#自报家门}
 > 因为Git是分布式版本控制系统，所以，每个机器都必须自报家门：你的名字和Email地址。
 
 
@@ -16,7 +16,7 @@ layoutClass: doc-layout
 > 注意 ```git config``` 命令的 ```--global``` 参数，用了这个参数，表示你这台机器上所有的Git仓库都会使用这个配置，当然也可以对某个仓库指定不同的用户名和Email地址。
 
 
-### 工作区和暂存区
+### 工作区和暂存区 {#工作区和暂存区}
 + 工作区（Working Directory）
      就是你在电脑里能看到的目录，比如创建的文件夹就是一个工作区
 
@@ -24,10 +24,10 @@ layoutClass: doc-layout
 + 暂存区（stage或者叫index）
      git add命令实际上就是把要提交的所有修改放到暂存区，然后，执行git commit就可以一次性把暂存区的所有修改提交到分支。
 
-### 创建版本库
+### 创建版本库 {#创建版本库}
 > 找到文件夹，然后 ```$ git init```
 
-### 关联 github 远程仓库
+### 关联 github 远程仓库 {#关联-github-远程仓库}
 1. 创建SSH Key
       先看看用户目录有没有.ssh目录，再看看这个目录下有没有id_rsa和id_rsa.pub这两个文件，如果有，跳过，如果没有，创建SSH Key：
       ```$ ssh-keygen -t rsa -C "youremail@example.com"```
@@ -56,13 +56,13 @@ layoutClass: doc-layout
       ```Warning: Permanently added 'github.com' (RSA) to the list of known hosts.```
       这个警告只会出现一次，后面的操作就不会有任何警告了。
 
-### 从远程库克隆
+### 从远程库克隆 {#从远程库克隆}
 ```$ git clone git@github.com:<github帐号>/<远程仓库名>.git```
 
 > 如果有多个人协作开发，那么每个人各自从远程克隆一份就可以了。
 
 
-### 常用命令
+### 常用命令 {#常用命令}
 + 添加到暂存区 ```$ git add <file>```
      - 添加所有文件 ```$ git add -A```
 
@@ -195,7 +195,7 @@ layoutClass: doc-layout
      - 以后 st 就表示 status
 
 ----------------------
-### 保持github上fork的项目与原项目同步
+### 保持github上fork的项目与原项目同步  {#保持github上fork的项目与原项目同步}
 > 转自[云栖社区](https://yq.aliyun.com/articles/39474)
 - 首先先通过 github 的 web 页面 fork 目标的项目
 前提是自己已经设置好了git,并且配置了相应的权限
