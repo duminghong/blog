@@ -44,16 +44,16 @@ next: false
 </style>
 
 # 关于我
-
+前端资深复制粘贴工程师😜
 
 
 ## 主业
 
 <div class="badgebox">
-  <img class="shields" src="https://img.shields.io/badge/HTML5-E34F26?logo=HTML5&logoColor=fff" alt="HTML5" />
-  <img class="shields" src="https://img.shields.io/badge/CSS3-1572B6?logo=CSS3&logoColor=fff" alt="CSS3" />
-  <img class="shields" src="https://img.shields.io/badge/JavaScript-F7DF1E?logo=JavaScript&logoColor=333" alt="JavaScript" />
-  <img class="shields" src="https://img.shields.io/badge/Vue.js-4FC08D?logo=Vue.js&logoColor=fff" alt="Vue.js" />
+  <img class="shields" src="/assets/badges/HTML5.svg" alt="HTML5" />
+  <img class="shields" src="/assets/badges/CSS3.svg" alt="CSS3" />
+  <img class="shields" src="/assets/badges/JavaScript.svg" alt="JavaScript" />
+  <img class="shields" src="/assets/badges/Vue.svg" alt="Vue.js" />
 </div>
 <div class="badgebox">
   <div class="badge" style="background: #6467ef">
@@ -66,12 +66,12 @@ next: false
   </div>
 </div>
 <div class="badgebox">
-  <img class="shields" src="https://img.shields.io/badge/Less-1D365D?logo=less&logoColor=fff" alt="Less" />
-  <img class="shields" src="https://img.shields.io/badge/Unocss-333333?logo=unocss&logoColor=fff" alt="Unocss" />
+  <img class="shields" src="/assets/badges/Less.svg" alt="Less" />
+  <img class="shields" src="/assets/badges/Unocss.svg" alt="Unocss" />
 </div>
 <div class="badgebox">
-  <img class="shields" src="https://img.shields.io/badge/NodeJs-5FA04E?logo=nodedotjs&logoColor=fff" alt="NodeJs" />
-  <img class="shields" src="https://img.shields.io/badge/Koa2-33333D?logo=Koa&logoColor=fff" alt="Koa2" />
+  <img class="shields" src="/assets/badges/NodeJs.svg" alt="NodeJs" />
+  <img class="shields" src="/assets/badges/Koa2.svg" alt="Koa2" />
   <div class="badge" style="background: #07c160">
     <img class="icon" src="https://static-index-4gtuqm3bfa95c963-1304825656.tcloudbaseapp.com/official-website/favicon.svg" />
     <span>微信云开发</span>
@@ -83,16 +83,16 @@ next: false
 
 ## 了解
 <div class="badgebox">
-  <img class="shields" src="https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=fff" alt="Linux" />
-  <img class="shields" src="https://img.shields.io/badge/NGINX-009639?logo=nginx&logoColor=fff" alt="NGINX" />
-  <img class="shields" src="https://img.shields.io/badge/Harmony-000000?logo=harmonyos&logoColor=fff" alt="Harmony" />
+  <img class="shields" src="/assets/badges/Linux.svg" alt="Linux" />
+  <img class="shields" src="/assets/badges/NGINX.svg" alt="NGINX" />
+  <img class="shields" src="/assets/badges/Harmony.svg" alt="Harmony" />
 </div>
 
 
 ## 工具
 <div class="badgebox">
-  <img class="shields" src="https://img.shields.io/badge/Git-F05032?logo=git&logoColor=fff" alt="Git" />
-  <img class="shields" src="https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=fff" alt="Vite" />
-  <img class="shields" src="https://img.shields.io/badge/Webpack-8DD6F9?logo=webpack&logoColor=fff" alt="Webpack" />
-  <img class="shields" src="https://img.shields.io/badge/Photoshop-31A8FF?logo=adobephotoshop&logoColor=fff" alt="Photoshop" />
+  <img class="shields" src="/assets/badges/Git.svg" alt="Git" />
+  <img class="shields" src="/assets/badges/Vite.svg" alt="Vite" />
+  <img class="shields" src="/assets/badges/Webpack.svg" alt="Webpack" />
+  <img class="shields" src="/assets/badges/Photoshop.svg" alt="Photoshop" />
 </div>
