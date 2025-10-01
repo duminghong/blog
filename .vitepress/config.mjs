@@ -1,8 +1,9 @@
 import { defineConfig } from 'vitepress'
 import { nav, sidebar, algolia } from './configs'
+import { withMermaid } from 'vitepress-plugin-mermaid'
 
 // https://vitepress.dev/reference/site-config
-export default defineConfig({
+export default defineConfig(withMermaid({
   // 全局title，标签页标题。若站点有title，则该全局title为后缀。若站点没有title，则该全局title就为整个标题
   // 首页标题：index.md的title | 全局title。其他页标题：第一个<h1>标头的文本内容 | 全局title
   title: "Duminghong",
@@ -18,19 +19,19 @@ export default defineConfig({
 
   // 站点将部署到的基本 URL。始终以斜线开头和结尾
   base: '/',
-  
+
   // 当设置为true时，VitePress 将从 URL 中删除尾随的.html（启用此功能可能需要在您的托管平台上进行额外配置。为了让它工作，您的服务器必须能够在访问/foo时提供/foo.html而无需重定向。）
   cleanUrls: true,
-  
+
   // 源目录（包括运行时和打包时使用的目录）：Markdown 源文件所在的位置，默认是项目根目录。将已该目录为基础搜寻.md文件进行构建
   srcDir: './docs',
 
   // 构建时，不构建哪些md文件
   srcExclude: ['**/README.md'],
-  
+
   // 站点的打包构建输出位置，相对于项目根目录。默认: ./.vitepress/dist
   // outDir: './dist',
-  
+
   // 打包后用于存放资源文件的目录。默认：assetsDir
   // assetsDir: 'static',
 
@@ -45,10 +46,10 @@ export default defineConfig({
   sitemap: {
     hostname: 'https://blog.duminghong.com/'
   },
-  
+
   // 是否使用 Git 获取每个页面的最后更新时间戳。时间戳将包含在每个页面的页面数据中，可通过 useData 访问。
   lastUpdated: true,
-  
+
   /*
    * 配置 Markdown 解析器选项。 VitePress 使用 Markdown-it 作为解析器
    */
@@ -80,13 +81,13 @@ export default defineConfig({
       light: '/logo_light.png',
       dark: '/logo_dark.png'
     },
-    
+
     // 导航栏左侧的标题（默认引用 config.title 值的站点标题）
     siteTitle: "Blog",
-    
+
     // 导航菜单项的配置
     nav,
-    
+
     // 侧边栏菜单项的配置
     sidebar,
 
@@ -94,7 +95,7 @@ export default defineConfig({
       provider: 'algolia',
       options: algolia
     },
-    
+
     // false可防止渲染旁路容器，true会将旁边渲染到右侧，left会将一侧呈现在左侧（默认值: true）
     aside: true,
 
@@ -108,13 +109,13 @@ export default defineConfig({
     socialLinks: [
       { icon: 'github', link: 'https://github.com/duminghong' }
     ],
-    
+
     // 页脚配置。您可以在页脚上添加消息或版权文本，但是，只有当页面不包含侧边栏时才会显示它。这是由于设计方面的考虑。（注意：当 SideBar 可见时，页脚将不会显示。）
     footer: {
       message: '创作不易请尊重他人劳动成果，未经允许禁止转载',
       copyright: `Copyright © 2013-${new Date().getFullYear()} duminghong.com <a class="foot-link" href="https://beian.miit.gov.cn" target="_blank">京ICP备15049230号-1</a>`
     },
-    
+
     // 自定义最后更新文本和日期格式。
     lastUpdated: {
       text: '上次更新时间',
@@ -123,7 +124,7 @@ export default defineConfig({
         timeStyle: 'medium'
       }
     },
-    
+
     // 可用于自定义上一个和下一个链接上方显示的文本。也可用于全局禁用上一个/下一个链接。
     docFooter: {
       prev: '上一篇',
@@ -132,20 +133,20 @@ export default defineConfig({
 
     // 可用于自定义深色模式开关标签。该标签仅显示在移动视图中。（移动端）（默认值: Appearance）
     darkModeSwitchLabel: '切换主题',
-    
+
     // 可用于自定义侧边栏菜单标签。该标签仅显示在移动视图中。（默认值: Menu）
     sidebarMenuLabel: '菜单',
-    
+
     // 可用于自定义返回顶部按钮的标签。该标签仅显示在移动视图中。（默认值: Return to top）
     returnToTopLabel: '返回顶部',
-    
+
     // 是否在Markdown中的外部链接旁显示外部链接图标。
     externalLinkIcon: true,
-    
+
     // 可用于自定义导航栏中语言切换按钮的 aria-label。仅当您使用 i18n 时才使用此选项。（默认值: Change language）
     langMenuLabel: '切换语言'
   },
-  
+
   // 打包完成前钩子（执行一次）
   async buildEnd(siteConfig) {
     // console.log('打包结束执行')
@@ -188,4 +189,4 @@ export default defineConfig({
     // 初始化打开新页面就会执行，类似与vue的mounted钩子
     // pageData.title = pageData.title + '**-*！'
   },
-})
+}))
