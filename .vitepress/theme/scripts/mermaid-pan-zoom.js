@@ -106,26 +106,6 @@ export async function setupMermaidPanZoom() {
           }
         });
 
-        // 添加是否启用控制开关，使用switch样式
-        const switchContainer = document.createElement('div');
-        switchContainer.className = 'mermaid-switch-container';
-        switchContainer.innerHTML = `
-          <label class="mermaid-switch-label">
-            启用缩放
-            <input type="checkbox" class="mermaid-switch-input" ${zoomEnabled ? 'checked' : ''}>
-            <span class="mermaid-switch-slider"></span>
-          </label>
-        `;
-        container.appendChild(switchContainer);
-
-        // 添加切换开关的事件监听
-        const switchInput = switchContainer.querySelector('.mermaid-switch-input');
-        switchInput.addEventListener('change', (e) => {
-          zoomEnabled = e.target.checked;
-          panZoomInstance.setZoomEnabled(zoomEnabled);
-          svgElement.style.cursor = zoomEnabled ? 'grab' : 'default';
-        });
-
         // 添加双击重置功能
         svgElement.addEventListener('dblclick', () => {
           panZoomInstance.reset();
