@@ -1,4 +1,4 @@
-import svgPanZoom from 'svg-pan-zoom';
+// import svgPanZoom from 'svg-pan-zoom';
 
 // 存储已处理的 mermaid 元素 ID，避免重复处理
 const processedMermaidIds = new Set();
@@ -6,9 +6,19 @@ const processedMermaidIds = new Set();
 /**
  * 为 Mermaid 图表添加缩放和平移功能
  */
-export function setupMermaidPanZoom() {
+export async function setupMermaidPanZoom() {
   // 确保在浏览器环境中运行
   if (typeof window === 'undefined') {
+    return;
+  }
+
+  // 动态导入 svg-pan-zoom 库，只在浏览器环境中执行
+  let svgPanZoom;
+  try {
+    const module = await import('svg-pan-zoom');
+    svgPanZoom = module.default || module;
+  } catch (error) {
+    console.error('Failed to import svg-pan-zoom:', error);
     return;
   }
 
