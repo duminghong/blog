@@ -1,5 +1,7 @@
 ---
 layoutClass: doc-layout
+title: Git笔记
+date: 2016-10-02 13:15:48
 ---
 
 # Git笔记

@@ -1,5 +1,7 @@
 ---
 layoutClass: doc-layout
+title: htmx笔记
+date: 2025-01-05 13:34:22
 ---
 
 # htmx笔记
