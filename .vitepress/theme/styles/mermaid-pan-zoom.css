@@ -65,9 +65,79 @@
   .mermaid-pan-zoom-wrapper {
     margin: 1rem 0;
   }
-  
+
   .mermaid-tooltip {
     font-size: 10px;
     padding: 2px 6px;
   }
+}
+
+/* 缩放拖拽开关样式 */
+.mermaid-switch-container {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.mermaid-pan-zoom-wrapper:hover .mermaid-switch-container {
+  opacity: 1;
+}
+
+.mermaid-switch-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+  color: #606266;
+}
+
+.mermaid-switch-input {
+  display: none;
+}
+
+.mermaid-switch-core {
+  position: relative;
+  width: 40px;
+  height: 20px;
+  border-radius: 10px;
+  background-color: #DCDFE6;
+  transition: background-color 0.3s;
+  margin-left: 8px;
+}
+
+.mermaid-switch-button {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #FFFFFF;
+  transition: transform 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* 开关开启状态 */
+.mermaid-switch-input:checked+.mermaid-switch-core {
+  background-color: var(--vp-c-primary);
+}
+
+.mermaid-switch-input:checked+.mermaid-switch-core .mermaid-switch-button {
+  transform: translateX(20px);
+}
+
+/* 深色模式下的开关样式 */
+.dark .mermaid-switch-label {
+  color: #E5EAF3;
+}
+
+.dark .mermaid-switch-core {
+  background-color: #4C4D4F;
+}
+
+.dark .mermaid-switch-input:checked+.mermaid-switch-core {
+  background-color: var(--vp-c-primary);
 }

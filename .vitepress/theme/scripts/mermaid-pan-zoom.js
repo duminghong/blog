@@ -117,6 +117,43 @@ export async function setupMermaidPanZoom() {
         tooltip.innerText = '提示：使用鼠标滚轮缩放，拖拽平移，双击重置';
         container.appendChild(tooltip);
 
+        // 添加禁用缩放拖拽功能
+        // 创建开关容器
+        const switchContainer = Object.assign(document.createElement('div'), {
+          className: 'mermaid-switch-container'
+        });
+        // 创建开关标签和输入
+        const switchLabel = Object.assign(document.createElement('label'), {
+          className: 'mermaid-switch-label',
+          innerHTML: `
+            <input type="checkbox" class="mermaid-switch-input" ${zoomEnabled ? 'checked' : ''}>
+            缩放/平移
+            <span class="mermaid-switch-core">
+              <span class="mermaid-switch-button"></span>
+            </span>
+          `
+        });
+        switchContainer.appendChild(switchLabel);
+        container.appendChild(switchContainer);
+
+        // 获取开关元素的引用
+        const switchInput = switchLabel.querySelector('.mermaid-switch-input');
+        // 添加开关事件监听
+        switchInput.addEventListener('change', function () {
+          zoomEnabled = this.checked;
+          if (this.checked) {
+            // 启用缩放和拖拽
+            panZoomInstance.enablePan();
+            panZoomInstance.enableZoom();
+            tooltip.style.display = 'block';
+          } else {
+            // 禁用缩放和拖拽
+            panZoomInstance.disablePan();
+            panZoomInstance.disableZoom();
+            tooltip.style.display = 'none';
+          }
+          svgElement.style.cursor = zoomEnabled ? 'grab' : 'default';
+        });
       } catch (error) {
         console.error('Failed to initialize svg-pan-zoom for mermaid:', error);
       }
