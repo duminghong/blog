@@ -2,7 +2,7 @@
  * @Author: duminghong i@duminghong.com
  * @Date: 2024-11-08 19:22:17
  * @LastEditors: duminghong i@duminghong.com
- * @LastEditTime: 2024-11-09 18:14:26
+ * @LastEditTime: 2025-10-02 13:10:39
  * @Description: 
  */
 import { createContentLoader } from 'vitepress'
@@ -10,11 +10,11 @@ import dayjs from 'dayjs';
 
 function getSource(url) {
   const match = url.match(/^\/([^/]+)\/.*$/);
-    return match ? match[1] : null;
+  return match ? match[1] : null;
 }
 
 function getFileName(path) {
-  const match = path.match(/^\/[^/]+\/([^/]+)\/?$/);
+  const match = path.match(/\/([^/]+)$/);
   return match ? match[1] : null;
 }
 
@@ -36,10 +36,10 @@ export default createContentLoader('**/*.md', {
    */
   excerpt: true,    // 包含摘录?
   transform(rawData) {
-    // console.log(rawData)
-    return rawData.filter(({url})=>{
-      var name = getFileName(url);
-      return name&&name !== 'about'&& name !== 'index';
+    return rawData.filter(({ url, frontmatter }) => {
+      const name = getFileName(url);
+      const time = frontmatter.date;
+      return name && name !== 'about' && name !== 'index' && time;
     }).sort((a, b) => {
       return +new Date(b.frontmatter.date) - +new Date(a.frontmatter.date)
     }).slice(0, 3).map(({ url, frontmatter, html }) => {
