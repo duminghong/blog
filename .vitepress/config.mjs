@@ -107,7 +107,7 @@ export default defineConfig(withMermaid({
 
     // 定义此选项以在导航中显示带有图标的社交帐户链接
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/duminghong' }
+      { icon: 'github', link: 'https://github.com/duminghong/blog' }
     ],
 
     // 页脚配置。您可以在页脚上添加消息或版权文本，但是，只有当页面不包含侧边栏时才会显示它。这是由于设计方面的考虑。（注意：当 SideBar 可见时，页脚将不会显示。）
