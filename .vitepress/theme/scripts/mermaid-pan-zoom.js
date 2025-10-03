@@ -137,17 +137,48 @@ async function exportMermaidToPng(container, filename) {
       console.error('容器中未找到SVG元素');
       return;
     }
+    // 获取svgElement的大小
+    const boundingRect = svgElement.getBoundingClientRect();
+    const svgWidth = boundingRect.width;
+    const svgHeight = boundingRect.height;
+
+    // 复制SVG元素，避免修改原始元素
+    const svgCopy = svgElement.cloneNode(true);
+
+    // 添加水印插入到容器中
+    // 使用CSS background-image和SVG data URI创建平铺文字背景
+    const textBgSvg = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='50' viewBox='0 0 200 100'%3E%3Ctext x='50%25' y='50%25' font-family='Arial' font-size='14' text-anchor='middle' fill='%23C0C0C0' fill-opacity='0.3' transform='rotate(30, 100, 50)'%3EPowered by Duminghong%3C/text%3E%3C/svg%3E`;
+
+    // 创建一个容器来包裹SVG
+    const containerSvg = document.createElement('div');
+    // 设置容器样式，平铺文字背景
+    containerSvg.style.cssText = `
+      width: ${svgWidth}px; 
+      height: ${svgHeight}px; 
+      background-color: #ffffff; 
+      background-image: url("${textBgSvg}"); 
+      background-repeat: repeat; 
+      overflow: hidden; 
+      position: fixed; 
+      padding: 10px;
+      left: -99999px; 
+      top: -99999px;
+    `;
+    containerSvg.appendChild(svgCopy);
+    // 添加到文档中，确保可以被snapdom访问
+    document.body.appendChild(containerSvg);
 
     // 使用snapdom将SVG转换为PNG
-    const result = await snapdom(svgElement, {
-      backgroundColor: '#ffffff', // 设置白色背景
-      scale: 3 // 缩放比例，默认是1，这里设置为2倍
+    const result = await snapdom(containerSvg, {
+      backgroundColor: 'transparent', // 设置透明背景
+      scale: 2 // 缩放比例，默认是1，这里设置为2倍
     });
+    // 删除临时容器
+    document.body.removeChild(containerSvg);
     // 下载图片
-    await result.download({ format: 'png', filename: filename || `duminghong-mermaid-chart-${Date.now()}` });
+    await result.download({ format: 'png', filename: filename || `DuBlog-image-${Date.now()}` });
   } catch (error) {
     console.error('导出功能错误:', error);
-    // alert('导出图片时发生错误，请使用浏览器截图功能。');
   }
 }
 
