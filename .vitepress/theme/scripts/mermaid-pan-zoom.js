@@ -65,63 +65,44 @@ export async function ensureSvgLoaded(svgElement) {
  * @param {Object} panZoomInstance - svg-pan-zoom实例
  * @returns {Object} - 包含创建的UI控件的引用对象
  */
-function createMermaidControls(container, zoomEnabled, panZoomInstance) {
+function createMermaidTip(container, zoomEnabled) {
   // 创建提示信息
   const tooltip = document.createElement('div');
   tooltip.className = 'mermaid-tooltip';
-  tooltip.innerText = '提示：使用鼠标滚轮缩放，拖拽平移，双击重置';
+  tooltip.innerText = `提示：${zoomEnabled ? '使用鼠标滚轮缩放，拖拽平移，双击重置，' : ''}右键查看更多`;
   container.appendChild(tooltip);
 
-  // 创建开关容器
-  const switchContainer = Object.assign(document.createElement('div'), {
-    className: 'mermaid-switch-container'
-  });
+  // 返回创建的UI控件引用
+  return tooltip;
+}
 
-  // 创建开关标签和输入
-  const switchLabel = Object.assign(document.createElement('label'), {
-    className: 'mermaid-switch-label',
-    innerHTML: `
-      <input type="checkbox" class="mermaid-switch-input" ${zoomEnabled ? 'checked' : ''}>
-      缩放/平移
-      <span class="mermaid-switch-core">
-        <span class="mermaid-switch-button"></span>
-      </span>
-    `
-  });
-
-  switchContainer.appendChild(switchLabel);
-  container.appendChild(switchContainer);
-
-  // 获取开关元素的引用
-  const switchInput = switchLabel.querySelector('.mermaid-switch-input');
-
-  // 添加开关事件监听
-  switchInput.addEventListener('change', function () {
-    const isEnabled = this.checked;
-    if (isEnabled) {
+/**
+ * 切换Mermaid图表的缩放平移状态
+ * @param {HTMLElement} container - 包含Mermaid图表的容器元素
+ * @param {boolean} zoomEnabled - 是否启用缩放平移功能
+ */
+function changeZoomPanState(container, zoomEnabled, panZoomInstance) {
+  if (panZoomInstance) {
+    if (zoomEnabled) {
       // 启用缩放和拖拽
       panZoomInstance.enablePan();
       panZoomInstance.enableZoom();
-      tooltip.style.display = 'block';
     } else {
       // 禁用缩放和拖拽
       panZoomInstance.disablePan();
       panZoomInstance.disableZoom();
-      tooltip.style.display = 'none';
     }
     // 更新SVG光标样式
     const svgElement = container.querySelector('svg');
     if (svgElement) {
-      svgElement.style.cursor = isEnabled ? 'grab' : 'default';
+      svgElement.style.cursor = zoomEnabled ? 'grab' : 'default';
     }
-  });
-
-  // 返回创建的UI控件引用
-  return {
-    tooltip,
-    switchInput,
-    switchContainer
-  };
+    // 更新提示文字
+    const tooltip = container.querySelector('.mermaid-tooltip');
+    if (tooltip) {
+      tooltip.innerText = `提示：${zoomEnabled ? '使用鼠标滚轮缩放，拖拽平移，双击重置，' : ''}右键查看更多`;
+    }
+  }
 }
 
 
@@ -183,20 +164,134 @@ async function exportMermaidToPng(container, filename) {
 }
 
 /**
- * 创建导出按钮并添加到容器中
- * @param {HTMLElement} container - 要添加按钮的容器
+ * 显示右键菜单
+ * @param {number} x - 鼠标X坐标
+ * @param {number} y - 鼠标Y坐标
  */
-function createExportButton(container) {
-  const exportButton = document.createElement('button');
-  exportButton.className = 'mermaid-export-button';
-  exportButton.textContent = '导出图片';
+function showContextMenu(e, container, panZoomInstance) {
+  // 移除已存在的菜单
+  const existingMenu = document.getElementById('mermaid-context-menu');
+  if (existingMenu) {
+    existingMenu.remove();
+  }
 
-  exportButton.addEventListener('click', () => {
-    exportMermaidToPng(container);
+  // 获取容器的位置信息
+  const containerRect = container.getBoundingClientRect();
+
+  // 计算相对于容器的坐标
+  const relativeX = e.clientX - containerRect.left;
+  const relativeY = e.clientY - containerRect.top;
+
+  // 创建菜单元素
+  const menu = document.createElement('div');
+  menu.id = 'mermaid-context-menu';
+  menu.style.left = `${relativeX}px`;
+  menu.style.top = `${relativeY}px`;
+
+  // 获取当前是否开启缩放平移功能
+  const zoomEnabled = container.getAttribute('mermaid-zoom') === 'true';
+
+  // 创建基础菜单项
+  const basicItems = [
+    {
+      id: 'menu-export-png',
+      text: '导出为PNG',
+      onClick: () => {
+        if (container) {
+          exportMermaidToPng(container);
+        }
+        menu.remove();
+      }
+    },
+    {
+      id: 'menu-view-source',
+      text: '查看源码',
+      onClick: () => {
+        // 获取当前页的路径
+        const currentPath = window.location.pathname;
+        // 构建源码URL
+        const sourceUrl = `https://github.com/duminghong/blog/blob/main/docs${currentPath}.md?plain=1`;
+        // 打开新标签页查看源码
+        window.open(sourceUrl, '_blank');
+
+        menu.remove();
+      }
+    }
+  ];
+
+  // 创建缩放相关菜单项
+  const zoomSwitch = {
+    id: 'menu-zoom-switch',
+    // 根据当前zoomEnabled状态显示不同的文本
+    text: zoomEnabled ? '禁用缩放/平移' : '启用缩放/平移',
+    onClick: () => {
+      // 切换缩放状态
+      const newZoomEnabled = !zoomEnabled;
+      // 更新缩放状态
+      if (panZoomInstance) {
+        // 获取当前是否开启缩放平移功能
+        const zoomEnabled = container.getAttribute('mermaid-zoom') === 'true';
+        if (zoomEnabled !== newZoomEnabled) {
+          // 更新容器的缩放平移状态属性
+          container.setAttribute('mermaid-zoom', newZoomEnabled);
+          // 切换缩放平移状态
+          changeZoomPanState(container, newZoomEnabled, panZoomInstance);
+        }
+      }
+      console.log('menu:remove');
+      menu.remove();
+    }
+  }
+  const zoomReset = {
+    id: 'menu-reset-view',
+    text: '重置视图',
+    onClick: () => {
+      if (panZoomInstance) {
+        panZoomInstance.reset();
+      }
+      menu.remove();
+    }
+  }
+  const zoomItems = panZoomInstance ? (zoomEnabled ? [zoomSwitch, zoomReset] : [zoomSwitch]) : [];
+  // 合并菜单项
+  const menuItems = zoomItems.concat(basicItems);
+
+  // 添加菜单项到菜单
+  menuItems.forEach(item => {
+    const menuItem = document.createElement('div');
+    menuItem.id = item.id;
+    menuItem.textContent = item.text;
+    menuItem.addEventListener('click', item.onClick);
+    menu.appendChild(menuItem);
   });
 
-  container.appendChild(exportButton);
-  return exportButton;
+  // 将菜单添加到容器
+  container.appendChild(menu);
+
+  // 确保菜单在容器内显示
+  const menuWidth = menu.offsetWidth + 10;
+  const menuHeight = menu.offsetHeight + 10;
+
+  // 检查并调整菜单位置，避免超出容器边界
+  if (relativeX + menuWidth > containerRect.width) {
+    menu.style.left = `${containerRect.width - menuWidth}px`;
+  }
+  if (relativeY + menuHeight > containerRect.height) {
+    menu.style.top = `${containerRect.height - menuHeight}px`;
+  }
+
+  // 点击其他地方关闭菜单
+  function closeMenu(event) {
+    if (!menu.contains(event.target) && event.target !== container) {
+      menu.remove();
+      document.removeEventListener('click', closeMenu);
+    }
+  }
+
+  // 添加关闭菜单的事件监听器
+  setTimeout(() => {
+    document.addEventListener('click', closeMenu);
+  }, 0);
 }
 
 /**
@@ -236,9 +331,6 @@ export async function setupMermaidPanZoom() {
     // 为容器添加内边距，确保内容不会被裁剪
     container.style.padding = '10px';
 
-    // 添加导出功能
-    createExportButton(container, svgElement);
-
     // 为 SVG 添加包装器，使其能够正确显示和缩放
     if (!container.classList.contains('mermaid-pan-zoom-wrapper')) {
       // 添加样式类
@@ -267,6 +359,19 @@ export async function setupMermaidPanZoom() {
         // 获取zoomEnabled属性
         zoomEnabled = previousSibling.getAttribute('mermaid-zoom') === 'true';
       }
+      // 更新容器的缩放平移状态属性
+      container.setAttribute('mermaid-zoom', zoomEnabled);
+
+      // 创建Mermaid图表的提示控件
+      createMermaidTip(container, zoomEnabled);
+
+      // 添加右键菜单
+      container.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        // 显示自定义菜单
+        showContextMenu(e, container, null);
+      });
+
       if (!zoomEnabled) {
         // 禁用缩放功能
         svgElement.style.cursor = 'default';
@@ -297,8 +402,12 @@ export async function setupMermaidPanZoom() {
             panZoomInstance.reset();
           });
 
-          // 创建Mermaid图表的UI控件
-          createMermaidControls(container, zoomEnabled, panZoomInstance);
+          // 添加右键菜单
+          container.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            // 显示自定义菜单
+            showContextMenu(e, container, panZoomInstance);
+          });
         });
       } catch (error) {
         console.error('Failed to initialize svg-pan-zoom for mermaid:', error);
