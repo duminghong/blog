@@ -26,8 +26,7 @@
 .mermaid-tooltip {
   position: absolute;
   top: 8px;
-  left: 50%;
-  transform: translateX(-50%);
+  right: 8px;
   background: rgba(0, 0, 0, 0.7);
   color: white;
   padding: 4px 8px;
@@ -36,29 +35,12 @@
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.3s ease;
+  z-index: 9;
+  white-space: nowrap;
 }
 
 .mermaid-pan-zoom-wrapper:hover .mermaid-tooltip {
   opacity: 1;
-}
-
-/* 自定义 svg-pan-zoom 控件样式 */
-.svg-pan-zoom-control {
-  fill: #333;
-  stroke: #fff;
-  stroke-width: 1;
-  opacity: 0.7;
-  transition: opacity 0.2s ease;
-}
-
-.svg-pan-zoom-control:hover {
-  opacity: 1;
-}
-
-/* 适配深色模式 */
-.dark .svg-pan-zoom-control {
-  fill: #ccc;
-  stroke: #333;
 }
 
 /* 确保在移动设备上也能正常工作 */
@@ -78,7 +60,7 @@
   position: absolute;
   top: 10px;
   left: 10px;
-  z-index: 1000;
+  z-index: 9;
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -143,32 +125,47 @@
   background-color: var(--vp-c-primary);
 }
 
-/* 导出按钮样式 */
-.mermaid-export-button {
+/* 右键菜单样式 */
+#mermaid-context-menu {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 1000;
-  padding: 4px 10px;
-  background-color: var(--vp-button-brand-bg);
-  color: white;
-  border: none;
+  /* 相对于父容器定位 */
+  background: white;
+  border: 1px solid #ccc;
   border-radius: 4px;
+  padding: 4px 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  /* 比容器内其他元素高，但不需要太高 */
+  min-width: 120px;
+  font-size: 14px;
+  margin: 0;
+  /* 移除默认边距 */
+  padding: 0;
+  /* 重置内边距 */
+}
+
+/* 菜单项样式 */
+#mermaid-context-menu>div {
+  padding: 8px 16px;
   cursor: pointer;
-  font-size: 12px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  white-space: nowrap;
+  margin: 0;
 }
 
-.mermaid-export-button:hover {
-  background-color: var(--vp-button-brand-hover-bg);
+#mermaid-context-menu>div:hover {
+  background: #f0f0f0;
 }
 
-.mermaid-pan-zoom-wrapper:hover .mermaid-export-button {
-  opacity: 1;
+/* 深色模式下的右键菜单样式 */
+.dark #mermaid-context-menu {
+  background: #333;
+  border-color: #555;
 }
 
-/* 深色模式下的导出按钮样式 */
-.dark .mermaid-export-button {
-  background-color: var(--vp-c-primary);
+.dark #mermaid-context-menu>div {
+  color: #eee;
+}
+
+.dark #mermaid-context-menu>div:hover {
+  background: #444;
 }
