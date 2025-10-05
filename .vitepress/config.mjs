@@ -112,7 +112,7 @@ export default defineConfig(withMermaid({
 
     // 页脚配置。您可以在页脚上添加消息或版权文本，但是，只有当页面不包含侧边栏时才会显示它。这是由于设计方面的考虑。（注意：当 SideBar 可见时，页脚将不会显示。）
     footer: {
-      message: '创作不易请尊重他人劳动成果，未经允许禁止转载',
+      message: '创作不易请尊重他人劳动成果，转载请注明出处',
       copyright: `Copyright © 2013-${new Date().getFullYear()} duminghong.com <a class="foot-link" href="https://beian.miit.gov.cn" target="_blank">京ICP备15049230号-1</a>`
     },
 
