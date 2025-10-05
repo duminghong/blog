@@ -12,6 +12,7 @@ import './styles/custom.css'
 import './styles/mermaid-pan-zoom.css'
 
 import { setupMermaidPanZoom, clearProcessedMermaidIds } from './scripts/mermaid-pan-zoom.js'
+import { setupCopyWithWatermark } from './scripts/copy-with-watermark.js'
 
 /**
  * 根据给定的值更新页面样式
@@ -94,6 +95,9 @@ export default {
         childList: true,
         subtree: true
       });
+
+      // 初始化全局复制事件拦截器，添加水印
+      setupCopyWithWatermark();
     }
   }
 }
