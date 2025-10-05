@@ -204,6 +204,21 @@ function showContextMenu(e, container, panZoomInstance) {
       }
     },
     {
+      id: 'menu-view-source-new-tab',
+      text: '新标签页打开',
+      onClick: () => {
+        // 复制svg内容
+        const svgNode = container.querySelector('svg').cloneNode(true);
+        const sourceHtml = svgNode.outerHTML;
+        // 新标签页打开
+        const blob = new Blob([sourceHtml], { type: 'text/html;charset=UTF-8' });
+        const blobUrl = URL.createObjectURL(blob);
+        window.open(blobUrl, '_blank');
+
+        menu.remove();
+      }
+    },
+    {
       id: 'menu-view-source',
       text: '查看源码',
       onClick: () => {
