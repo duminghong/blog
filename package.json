@@ -26,7 +26,10 @@
   },
   "homepage": "https://github.com/duminghong/blog#readme",
   "devDependencies": {
+    "less": "^4.4.2",
     "mermaid": "^11.12.0",
+    "unocss": "^65.4.0",
+    "@unocss/preset-attributify": "^65.4.0",
     "vitepress": "^1.4.1",
     "vitepress-plugin-mermaid": "^2.0.17",
     "vitepress-sidebar": "^1.29.0"
