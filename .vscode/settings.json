@@ -1,3 +1,40 @@
 {
-  "nuxt.isNuxtApp": false
+  "nuxt.isNuxtApp": false,
+  // Vue格式化配置
+  "vetur.format.defaultFormatter.html": "js-beautify-html",
+  "vetur.format.defaultFormatter.js": "prettier",
+  "vetur.format.defaultFormatter.ts": "prettier",
+  "vetur.format.defaultFormatterOptions": {
+    "prettier": {
+      "printWidth": 80,
+      "singleQuote": true,
+      "semi": false,
+      "htmlWhitespaceSensitivity": "ignore"
+    },
+    "js-beautify-html": {
+      "wrap_attributes": "force",
+      "wrap_attributes_indent_size": 2,
+      "max_attributes_per_line": 3
+    }
+  },
+  // Vue 3 + Volar配置
+  "[vue]": {
+    "editor.defaultFormatter": "Vue.volar"
+  },
+  // Prettier配置
+  "prettier.printWidth": 80,
+  "prettier.singleQuote": true,
+  "prettier.semi": false,
+  "prettier.htmlWhitespaceSensitivity": "ignore",
+  "prettier.vueIndentScriptAndStyle": true,
+  // HTML格式化配置
+  "html.format.wrapAttributes": "force",
+  "html.format.maxAttributesPerLine": 3,
+  "html.format.extraLiners": "",
+  "html.format.enable": true,
+  // 通用编辑器设置
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  }
 }
