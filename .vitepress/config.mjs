@@ -1,6 +1,8 @@
 import { defineConfig } from 'vitepress'
 import { nav, sidebar, algolia } from './configs'
 import { withMermaid } from 'vitepress-plugin-mermaid'
+import UnoCSS from 'unocss/vite'
+import JSON5 from 'json5'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig(withMermaid({
@@ -50,6 +52,13 @@ export default defineConfig(withMermaid({
   // 是否使用 Git 获取每个页面的最后更新时间戳。时间戳将包含在每个页面的页面数据中，可通过 useData 访问。
   lastUpdated: true,
 
+  // Vite配置
+  vite: {
+    plugins: [
+      UnoCSS()
+    ]
+  },
+
   /*
    * 配置 Markdown 解析器选项。 VitePress 使用 Markdown-it 作为解析器
    */
@@ -72,6 +81,64 @@ export default defineConfig(withMermaid({
     config(md) {
       // md.use(componentPreview)
       // md.use(containerPreview)
+
+      // 自定义代码块渲染规则
+      const defaultFence = md.renderer.rules.fence;
+      md.renderer.rules.fence = function (tokens, idx, options, env, self) {
+        const token = tokens[idx];
+        const info = token.info.trim();
+
+        // 检查是否是自定义代码块
+        if (info.includes('codeRunTask')) {
+          // 解析参数
+          const params = info.split(' ');
+          const language = params.length > 0 ? params[0] : 'javascript';
+          const title = params.length > 2 ? params[2] : '';
+
+          // 获取数据
+          let data = {};
+          // 从token.content中提取数据
+          const content = token.content;
+          if (content) {
+            // 提取JSON格式的数据块，支持对象和数组
+            const jsonMatch = content.match(/---\s*\ndata:\s*(\{[\s\S]*?\}|\[[\s\S]*?\])\s*---\n?/);
+            // 只有在找到匹配的数据块时才执行替换操作
+            if (jsonMatch) {
+              // 将content去掉匹配的数据块
+              const cleanedContent = content.replace(jsonMatch[0], '');
+              tokens[idx].content = cleanedContent;
+
+              try {
+                // 使用JSON5解析，支持单引号、注释、尾随逗号等非标准JSON格式
+                // 先移除控制字符和不间断空格
+                let cleanedJson = jsonMatch[1]
+                  .replace(/[\u0000-\u001F\u007F-\u009F]/g, '') // 移除控制字符
+                  .replace(/\u00A0/g, ' '); // 将不间断空格替换为普通空格
+
+                // 使用JSON5解析
+                data = JSON5.parse(cleanedJson);
+              } catch (e) {
+                console.error('JSON5解析失败:', e);
+                console.error('原始数据:', jsonMatch[1]);
+              }
+            }
+          }
+
+          // 使用默认的代码高亮处理
+          const highlightedCode = defaultFence.call(self, tokens, idx, options, env, self);
+
+          // 返回自定义组件的HTML，包含高亮代码和数据
+          // 使用Base64编码HTML内容和数据，避免属性中的特殊字符问题
+          // 使用UTF-8编码确保中文字符正确处理
+          const highlightedCodeBase64 = Buffer.from(highlightedCode, 'utf8').toString('base64');
+          const dataBase64 = Buffer.from(JSON.stringify(data), 'utf8').toString('base64');
+
+          return `<CodeRunTask title="${title}" language="${language}" data-base64="${dataBase64}" highlighted-code-base64="${highlightedCodeBase64}"></CodeRunTask>`;
+        }
+
+        // 如果不是自定义代码块，使用默认渲染
+        return defaultFence(tokens, idx, options, env, self);
+      };
     }
   },
   themeConfig: {
