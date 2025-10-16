@@ -8,7 +8,7 @@
   --vp-button-brand-hover-bg: #ff2e43;
 
   /* element plus */
-  /* --el-color-primary: #e70217; */
+  --el-color-primary: #e70217;
 }
 
 .group:has([role='button']) .VPSidebarItem.level-0 h2.text {
