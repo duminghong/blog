@@ -7,9 +7,11 @@ import 'element-plus/dist/index.css'
 
 import Layout from "./Layout.vue";
 import Features from "./components/Features.vue";
+import CodeRunTask from "./components/CodeRunTask.vue";
 
 import './styles/custom.css'
 import './styles/mermaid-pan-zoom.css'
+import 'virtual:uno.css'
 
 import { setupMermaidPanZoom, clearProcessedMermaidIds } from './scripts/mermaid-pan-zoom.js'
 import { setupCopyWithWatermark } from './scripts/copy-with-watermark.js'
@@ -54,6 +56,7 @@ export default {
     app.use(ElementPlus)
     // 注册自定义全局组件
     app.component('Features', Features)
+    app.component('CodeRunTask', CodeRunTask)
 
     // 监听路由的相对路径变化
     if (typeof window !== 'undefined') {
