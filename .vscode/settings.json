@@ -1,20 +1,16 @@
 {
   "nuxt.isNuxtApp": false,
   // Vue格式化配置
-  "vetur.format.defaultFormatter.html": "js-beautify-html",
+  "vetur.format.defaultFormatter.html": "prettier",
   "vetur.format.defaultFormatter.js": "prettier",
   "vetur.format.defaultFormatter.ts": "prettier",
   "vetur.format.defaultFormatterOptions": {
     "prettier": {
-      "printWidth": 80,
+      "printWidth": 120,
       "singleQuote": true,
       "semi": false,
-      "htmlWhitespaceSensitivity": "ignore"
-    },
-    "js-beautify-html": {
-      "wrap_attributes": "force",
-      "wrap_attributes_indent_size": 2,
-      "max_attributes_per_line": 3
+      "htmlWhitespaceSensitivity": "ignore",
+      "bracketSameLine": true
     }
   },
   // Vue 3 + Volar配置
@@ -22,14 +18,15 @@
     "editor.defaultFormatter": "Vue.volar"
   },
   // Prettier配置
-  "prettier.printWidth": 80,
+  "prettier.printWidth": 120,
   "prettier.singleQuote": true,
   "prettier.semi": false,
   "prettier.htmlWhitespaceSensitivity": "ignore",
   "prettier.vueIndentScriptAndStyle": true,
+  "prettier.bracketSameLine": true,
   // HTML格式化配置
-  "html.format.wrapAttributes": "force",
-  "html.format.maxAttributesPerLine": 3,
+  "html.format.wrapAttributes": "auto",
+  "html.format.maxAttributesPerLine": 1,
   "html.format.extraLiners": "",
   "html.format.enable": true,
   // 通用编辑器设置
