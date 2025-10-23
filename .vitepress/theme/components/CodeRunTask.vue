@@ -627,12 +627,6 @@ onUnmounted(() => {
         </el-scrollbar>
       </div>
 
-      <el-tooltip effect="dark" placement="top-start">
-        <template #content>
-          <div class="pre">{{ MainThreadConfig.callStack.tip }}</div>
-        </template>
-        <h4 class="stack-title">{{ MainThreadConfig.callStack.name }}:</h4>
-      </el-tooltip>
       <!-- 事件循环可视化 -->
       <div class="codeRunTask-visualization">
         <!-- 主线程区域 -->
