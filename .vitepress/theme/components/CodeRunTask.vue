@@ -632,10 +632,8 @@ onUnmounted(() => {
         <!-- 主线程区域 -->
         <div class="thread-section">
           <div class="flex_lr_m">
-            <el-tooltip effect="dark" placement="top-start">
-              <template #content>
-                <div class="pre">{{ MainThreadConfig.tip }}</div>
-              </template>
+            <el-tooltip effect="dark" placement="top-start" :content="MainThreadConfig.tip.replace(/\n/g, '<br>')"
+              raw-content>
               <h3>{{ MainThreadConfig.name }}</h3>
             </el-tooltip>
             <div class="thread-status">
@@ -654,11 +652,8 @@ onUnmounted(() => {
           </div>
           <div class="task-container flex items-center">
             <!-- 调用栈 -->
-            <el-tooltip effect="dark" placement="top-start">
-              <template #content>
-                <div class="pre">ahahah</div>
-                <!-- <div class="pre">{{ MainThreadConfig.callStack.tip }}</div> -->
-              </template>
+            <el-tooltip effect="dark" placement="top-start"
+              :content="MainThreadConfig.callStack.tip.replace(/\n/g, '<br>')" raw-content>
               <h4 class="stack-title">{{ MainThreadConfig.callStack.name }}:</h4>
             </el-tooltip>
             <el-scrollbar class="flex1">
@@ -695,7 +690,8 @@ onUnmounted(() => {
         <!-- 微队列区域 -->
         <div class="queue-section">
           <div class="flex">
-            <el-tooltip effect="dark" :content="MicrotaskQueueConfig.tip" placement="top-start">
+            <el-tooltip effect="dark" :content="MicrotaskQueueConfig.tip.replace(/\n/g, '<br>')" raw-content
+              placement="top-start">
               <h3>{{ MicrotaskQueueConfig.name }}</h3>
             </el-tooltip>
           </div>
@@ -723,7 +719,8 @@ onUnmounted(() => {
           </div>
           <div class="queues-list">
             <div class="queue-item flex items-center" v-for="(queue, key) in macrotaskQueue" :key="key">
-              <el-tooltip effect="dark" :content="TaskQueueConfig[key].tip" placement="top-start">
+              <el-tooltip effect="dark" :content="TaskQueueConfig[key].tip.replace(/\n/g, '<br>')" raw-content
+                placement="top-start">
                 <h4 class="queue-name cursor-pointer">{{ TaskQueueConfig[key].name }}</h4>
               </el-tooltip>
               <div class="queue-content" :style="{ backgroundColor: Colors[key].bg, color: Colors[key].text }">
