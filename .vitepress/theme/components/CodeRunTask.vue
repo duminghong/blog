@@ -135,7 +135,6 @@ const setCurrentRunColor = (task, isScroll = false) => {
   const firstCodeNumber = task.codeNumbers[0]
   const currentLine = lineElements[firstCodeNumber - 1]
   if (currentLine && scrollbarRef.value) {
-    console.log(currentLine.offsetTop)
     nextTick(() => {
       // 滚动到当前行
       scrollbarRef.value.setScrollTop(currentLine.offsetTop - 30)
@@ -597,194 +596,197 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="codeRunTask" ref="componentRef">
-    <div class="codeRunTask-header flex_lr_m">
-      <div>{{ title || '事件循环模拟' }}</div>
-      <div class="flex gap10">
-        <button class="codeRunTask-header-btn-run" @click="toggleRunPause()" :disabled="false">
-          {{ getButtonText() }}
-        </button>
-        <button class="codeRunTask-header-btn-step-back" @click="stepBack()" :disabled="executionHistory.length === 0">
-          上一步
-        </button>
-        <button class="codeRunTask-header-btn-step" @click="stepNext()"
-          :disabled="mainThread.isRunning && !mainThread.isPaused">
-          下一步
-        </button>
-        <button class="codeRunTask-header-btn-reset" @click="resetEventLoop()">
-          重置
-        </button>
-        <button class="codeRunTask-header-btn-fullscreen" @click="toggleFullscreen()">
-          {{ isFullscreen ? '退出全屏' : '全屏' }}
-        </button>
+  <ClientOnly>
+    <div class="codeRunTask" ref="componentRef">
+      <div class="codeRunTask-header flex_lr_m">
+        <div>{{ title || '事件循环模拟' }}</div>
+        <div class="flex gap10">
+          <button class="codeRunTask-header-btn-run" @click="toggleRunPause()" :disabled="false">
+            {{ getButtonText() }}
+          </button>
+          <button class="codeRunTask-header-btn-step-back" @click="stepBack()"
+            :disabled="executionHistory.length === 0">
+            上一步
+          </button>
+          <button class="codeRunTask-header-btn-step" @click="stepNext()"
+            :disabled="mainThread.isRunning && !mainThread.isPaused">
+            下一步
+          </button>
+          <button class="codeRunTask-header-btn-reset" @click="resetEventLoop()">
+            重置
+          </button>
+          <button class="codeRunTask-header-btn-fullscreen" @click="toggleFullscreen()">
+            {{ isFullscreen ? '退出全屏' : '全屏' }}
+          </button>
+        </div>
       </div>
-    </div>
-    <!-- 功能区 -->
-    <div class="codeRunTask-container">
-      <div class="codeRunTask-code">
-        <el-scrollbar ref="scrollbarRef">
-          <div v-html="highlightedCodeHtml" ref="codeContentRef"></div>
-        </el-scrollbar>
-      </div>
+      <!-- 功能区 -->
+      <div class="codeRunTask-container">
+        <div class="codeRunTask-code">
+          <el-scrollbar ref="scrollbarRef">
+            <div v-html="highlightedCodeHtml" ref="codeContentRef"></div>
+          </el-scrollbar>
+        </div>
 
-      <!-- 事件循环可视化 -->
-      <div class="codeRunTask-visualization">
-        <!-- 主线程区域 -->
-        <div class="thread-section">
-          <div class="flex_lr_m">
-            <el-tooltip effect="dark" placement="top-start" :content="MainThreadConfig.tip.replace(/\n/g, '<br>')"
-              raw-content>
-              <h3>{{ MainThreadConfig.name }}</h3>
-            </el-tooltip>
-            <div class="thread-status">
-              状态: <span :class="{ 'status-running': mainThread.isRunning }">
-                {{ mainThread.isRunning ? '运行中' : '空闲' }}
-              </span>
+        <!-- 事件循环可视化 -->
+        <div class="codeRunTask-visualization">
+          <!-- 主线程区域 -->
+          <div class="thread-section">
+            <div class="flex_lr_m">
+              <el-tooltip effect="dark" placement="top-start" :content="MainThreadConfig.tip.replace(/\n/g, '<br>')"
+                raw-content>
+                <h3>{{ MainThreadConfig.name }}</h3>
+              </el-tooltip>
+              <div class="thread-status">
+                状态: <span :class="{ 'status-running': mainThread.isRunning }">
+                  {{ mainThread.isRunning ? '运行中' : '空闲' }}
+                </span>
+              </div>
+            </div>
+            <!-- 当前任务 -->
+            <div class="current-task flex_m mb10">
+              <div class="mr5">当前执行: </div>
+              <el-tag effect="dark" :color="Colors[mainThread.currentTask.type].text"
+                :style="{ borderColor: Colors[mainThread.currentTask.type].text }" v-if="mainThread.currentTask">
+                {{ mainThread.currentTask.taskName }}
+              </el-tag>
+            </div>
+            <div class="task-container flex items-center">
+              <!-- 调用栈 -->
+              <el-tooltip effect="dark" placement="top-start"
+                :content="MainThreadConfig.callStack.tip.replace(/\n/g, '<br>')" raw-content>
+                <h4 class="stack-title">{{ MainThreadConfig.callStack.name }}:</h4>
+              </el-tooltip>
+              <el-scrollbar class="flex1">
+                <div class="stack-list flex_m gap4"
+                  :style="{ backgroundColor: Colors.mainThread.bg, color: Colors.mainThread.text }">
+                  <el-tag effect="dark" :color="Colors[item.type].text" :style="{ borderColor: Colors[item.type].text }"
+                    v-for="(item, index) in mainThread.callStack" :key="index">
+                    {{ item.taskName }}
+                  </el-tag>
+                </div>
+              </el-scrollbar>
             </div>
           </div>
-          <!-- 当前任务 -->
-          <div class="current-task flex_m mb10">
-            <div class="mr5">当前执行: </div>
-            <el-tag effect="dark" :color="Colors[mainThread.currentTask.type].text"
-              :style="{ borderColor: Colors[mainThread.currentTask.type].text }" v-if="mainThread.currentTask">
-              {{ mainThread.currentTask.taskName }}
-            </el-tag>
-          </div>
-          <div class="task-container flex items-center">
-            <!-- 调用栈 -->
-            <el-tooltip effect="dark" placement="top-start"
-              :content="MainThreadConfig.callStack.tip.replace(/\n/g, '<br>')" raw-content>
-              <h4 class="stack-title">{{ MainThreadConfig.callStack.name }}:</h4>
-            </el-tooltip>
-            <el-scrollbar class="flex1">
-              <div class="stack-list flex_m gap4"
-                :style="{ backgroundColor: Colors.mainThread.bg, color: Colors.mainThread.text }">
-                <el-tag effect="dark" :color="Colors[item.type].text" :style="{ borderColor: Colors[item.type].text }"
-                  v-for="(item, index) in mainThread.callStack" :key="index">
-                  {{ item.taskName }}
-                </el-tag>
-              </div>
-            </el-scrollbar>
-          </div>
-        </div>
-        <!-- 同步任务队列区域 -->
-        <div class="queue-section" v-if="synchronousTaskQueue.tasks.length > 0">
-          <div class="flex">
-            <el-tooltip effect="dark" content="同步任务队列存储按代码顺序排列的同步任务，这些任务会被依次推入调用栈执行" placement="top-start">
-              <h3>同步任务</h3>
-            </el-tooltip>
-          </div>
-          <div class="queue-item flex items-center">
-            <el-scrollbar class="queue-content"
-              :style="{ backgroundColor: Colors.synchronous.bg, color: Colors.synchronous.text }">
-              <div class="flex_m gap4">
-                <el-tag effect="dark" :color="Colors[task.type].text" v-for="task in synchronousTaskQueue.tasks"
-                  :key="task.id" :class="`task-${task.status}`" :style="{ borderColor: Colors.synchronous.border }">
-                  {{ task.taskName }}
-                </el-tag>
-              </div>
-            </el-scrollbar>
-          </div>
-        </div>
-
-        <!-- 微队列区域 -->
-        <div class="queue-section">
-          <div class="flex">
-            <el-tooltip effect="dark" :content="MicrotaskQueueConfig.tip.replace(/\n/g, '<br>')" raw-content
-              placement="top-start">
-              <h3>{{ MicrotaskQueueConfig.name }}</h3>
-            </el-tooltip>
-          </div>
-          <div class="queue-item flex items-center">
-            <el-scrollbar class="queue-content"
-              :style="{ backgroundColor: MicrotaskQueueConfig.color.bg, color: MicrotaskQueueConfig.color.text }">
-              <div class="flex_m gap4">
-                <el-tag effect="dark" :color="Colors[task.type].text" v-for="task in microtaskQueue.tasks"
-                  :key="task.id" :class="`task-${task.status}`"
-                  :style="{ borderColor: MicrotaskQueueConfig.color.border }">
-                  {{ task.taskName }}
-                </el-tag>
-              </div>
-            </el-scrollbar>
-          </div>
-        </div>
-
-        <!-- 任务队列区域 -->
-        <div class="queue-section" v-if="Object.keys(macrotaskQueue).length > 0">
-          <div class="flex">
-            <el-tooltip effect="dark" content="消息队列(宏任务队列)是浏览器用于存储待处理任务(消息)的队列，当执行完微队列中的所有任务后，会从队列中取出一个任务执行。"
-              placement="top-start">
-              <h3>消息队列（宏队列）</h3>
-            </el-tooltip>
-          </div>
-          <div class="queues-list">
-            <div class="queue-item flex items-center" v-for="(queue, key) in macrotaskQueue" :key="key">
-              <el-tooltip effect="dark" :content="TaskQueueConfig[key].tip.replace(/\n/g, '<br>')" raw-content
-                placement="top-start">
-                <h4 class="queue-name cursor-pointer">{{ TaskQueueConfig[key].name }}</h4>
+          <!-- 同步任务队列区域 -->
+          <div class="queue-section" v-if="synchronousTaskQueue.tasks.length > 0">
+            <div class="flex">
+              <el-tooltip effect="dark" content="同步任务队列存储按代码顺序排列的同步任务，这些任务会被依次推入调用栈执行" placement="top-start">
+                <h3>同步任务</h3>
               </el-tooltip>
-              <div class="queue-content" :style="{ backgroundColor: Colors[key].bg, color: Colors[key].text }">
-                <div class="task-list">
-                  <div v-for="(task, index) in queue.tasks" :key="task.id" class="task-item"
-                    :class="`task-${task.status}`" :style="{ borderColor: Colors[key].border }">
-                    {{ index + 1 }}. {{ task.name }}
+            </div>
+            <div class="queue-item flex items-center">
+              <el-scrollbar class="queue-content"
+                :style="{ backgroundColor: Colors.synchronous.bg, color: Colors.synchronous.text }">
+                <div class="flex_m gap4">
+                  <el-tag effect="dark" :color="Colors[task.type].text" v-for="task in synchronousTaskQueue.tasks"
+                    :key="task.id" :class="`task-${task.status}`" :style="{ borderColor: Colors.synchronous.border }">
+                    {{ task.taskName }}
+                  </el-tag>
+                </div>
+              </el-scrollbar>
+            </div>
+          </div>
+
+          <!-- 微队列区域 -->
+          <div class="queue-section">
+            <div class="flex">
+              <el-tooltip effect="dark" :content="MicrotaskQueueConfig.tip.replace(/\n/g, '<br>')" raw-content
+                placement="top-start">
+                <h3>{{ MicrotaskQueueConfig.name }}</h3>
+              </el-tooltip>
+            </div>
+            <div class="queue-item flex items-center">
+              <el-scrollbar class="queue-content"
+                :style="{ backgroundColor: MicrotaskQueueConfig.color.bg, color: MicrotaskQueueConfig.color.text }">
+                <div class="flex_m gap4">
+                  <el-tag effect="dark" :color="Colors[task.type].text" v-for="task in microtaskQueue.tasks"
+                    :key="task.id" :class="`task-${task.status}`"
+                    :style="{ borderColor: MicrotaskQueueConfig.color.border }">
+                    {{ task.taskName }}
+                  </el-tag>
+                </div>
+              </el-scrollbar>
+            </div>
+          </div>
+
+          <!-- 任务队列区域 -->
+          <div class="queue-section" v-if="Object.keys(macrotaskQueue).length > 0">
+            <div class="flex">
+              <el-tooltip effect="dark" content="消息队列(宏任务队列)是浏览器用于存储待处理任务(消息)的队列，当执行完微队列中的所有任务后，会从队列中取出一个任务执行。"
+                placement="top-start">
+                <h3>消息队列（宏队列）</h3>
+              </el-tooltip>
+            </div>
+            <div class="queues-list">
+              <div class="queue-item flex items-center" v-for="(queue, key) in macrotaskQueue" :key="key">
+                <el-tooltip effect="dark" :content="TaskQueueConfig[key].tip.replace(/\n/g, '<br>')" raw-content
+                  placement="top-start">
+                  <h4 class="queue-name cursor-pointer">{{ TaskQueueConfig[key].name }}</h4>
+                </el-tooltip>
+                <div class="queue-content" :style="{ backgroundColor: Colors[key].bg, color: Colors[key].text }">
+                  <div class="task-list">
+                    <div v-for="(task, index) in queue.tasks" :key="task.id" class="task-item"
+                      :class="`task-${task.status}`" :style="{ borderColor: Colors[key].border }">
+                      {{ index + 1 }}. {{ task.name }}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- 执行结果区域 -->
-        <div class="execution-result">
-          <h3>执行结果</h3>
-          <div class="result-content" ref="resultContentRef">
-            <el-timeline style="max-width: 600px">
-              <el-timeline-item v-for="data in resultDatas" :key="data.id" :timestamp="TaskName[data.type]"
-                placement="top">
-                <template #dot>
-                  <el-tooltip content="点击定位" placement="top">
-                    <div class="result-content-dot" :style="{ color: Colors[data.type].text }"
-                      @click="setCurrentRunColor(data, true)"></div>
-                  </el-tooltip>
-                </template>
-                <div class="f13 b">{{ data.task }}</div>
-                <div class="f12">{{ data.result }}</div>
-              </el-timeline-item>
-            </el-timeline>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 控制台区域 -->
-    <div class="console-section">
-      <div class="console-title flex_m">控制台</div>
-      <el-scrollbar max-height="200px">
-        <div class="console-content">
-          <div class="console-item flex_lr_m" v-for="task in resultDatas" :key="task.id" v-show="task.console"
-            @click="setCurrentRunColor(task, true)">
-            <div>{{ task.console }}</div>
-            <div class="line" v-if="task.codeNumbers && task.codeNumbers.length > 0">行号:{{ task.codeNumbers.join(',') }}
+          <!-- 执行结果区域 -->
+          <div class="execution-result">
+            <h3>执行结果</h3>
+            <div class="result-content" ref="resultContentRef">
+              <el-timeline style="max-width: 600px">
+                <el-timeline-item v-for="data in resultDatas" :key="data.id" :timestamp="TaskName[data.type]"
+                  placement="top">
+                  <template #dot>
+                    <el-tooltip content="点击定位" placement="top">
+                      <div class="result-content-dot" :style="{ color: Colors[data.type].text }"
+                        @click="setCurrentRunColor(data, true)"></div>
+                    </el-tooltip>
+                  </template>
+                  <div class="f13 b">{{ data.task }}</div>
+                  <div class="f12">{{ data.result }}</div>
+                </el-timeline-item>
+              </el-timeline>
             </div>
           </div>
         </div>
-      </el-scrollbar>
-    </div>
-    <!-- 重置提示 -->
-    <el-dialog v-model="dialogVisible" width="400px" title="确认重置吗？">
-      <span>运行已结束，重新开始请先重置。</span>
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button @click="dialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="handleResetConfirm">
-            确认重置
-          </el-button>
-        </div>
-      </template>
-    </el-dialog>
-  </div>
+      </div>
 
+      <!-- 控制台区域 -->
+      <div class="console-section">
+        <div class="console-title flex_m">控制台</div>
+        <el-scrollbar max-height="200px">
+          <div class="console-content">
+            <div class="console-item flex_lr_m" v-for="task in resultDatas" :key="task.id" v-show="task.console"
+              @click="setCurrentRunColor(task, true)">
+              <div>{{ task.console }}</div>
+              <div class="line" v-if="task.codeNumbers && task.codeNumbers.length > 0">行号:{{ task.codeNumbers.join(',')
+                }}
+              </div>
+            </div>
+          </div>
+        </el-scrollbar>
+      </div>
+      <!-- 重置提示 -->
+      <el-dialog v-model="dialogVisible" width="400px" title="确认重置吗？">
+        <span>运行已结束，重新开始请先重置。</span>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button @click="dialogVisible = false">取消</el-button>
+            <el-button type="primary" @click="handleResetConfirm">
+              确认重置
+            </el-button>
+          </div>
+        </template>
+      </el-dialog>
+    </div>
+  </ClientOnly>
 </template>
 
 <style lang="less" scoped>
