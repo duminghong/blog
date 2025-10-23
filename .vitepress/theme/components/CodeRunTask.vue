@@ -239,6 +239,17 @@ const getNextMacrotask = () => {
 // 初始化事件循环
 let currentTaskIndex = 0;
 const initRun = (time = 1000) => {
+  if (currentTaskIndex == 0) {
+    // 添加初始化结果
+    const initTask = {
+      id: 'init',
+      type: EventLoopTypes.SYNCHRONOUS,
+      codeNumbers: [],
+      task: '初始化',
+      result: '按序执行同步任务，全局上下文入栈'
+    }
+    resultDatas.value.push(initTask)
+  }
   // 初始化同步任务队列
   const synchronousTasks = taskData.value.filter(task => task.type === EventLoopTypes.SYNCHRONOUS)
   // 检查是否还有同步任务
@@ -755,7 +766,8 @@ onUnmounted(() => {
           <div class="console-item flex_lr_m" v-for="task in resultDatas" :key="task.id" v-show="task.console"
             @click="setCurrentRunColor(task, true)">
             <div>{{ task.console }}</div>
-            <div class="line">行号:{{ task.codeNumbers.join(',') }}</div>
+            <div class="line" v-if="task.codeNumbers && task.codeNumbers.length > 0">行号:{{ task.codeNumbers.join(',') }}
+            </div>
           </div>
         </div>
       </el-scrollbar>
