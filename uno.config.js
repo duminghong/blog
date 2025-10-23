@@ -122,6 +122,7 @@ export default defineConfig({
     ['ell_3', { 'display': '-webkit-box', '-webkit-box-orient': 'vertical', '-webkit-line-clamp': '3' }],
     ['no_select', { 'user-select': 'none' }],
     ['text_select', { 'user-select': 'text' }],
+    ['pre', { 'white-space': 'pre-wrap' }],
 
     ['no-drag', { '-webkit-app-region': 'no-drag' }],
 
