@@ -652,6 +652,12 @@ onUnmounted(() => {
               {{ mainThread.currentTask.taskName }}
             </el-tag>
           </div>
+          <el-tooltip effect="dark" placement="top-start">
+            <template #content>
+              <div class="pre">{{ MainThreadConfig.callStack.tip }}</div>
+            </template>
+            <h4 class="stack-title">{{ MainThreadConfig.callStack.name }}:</h4>
+          </el-tooltip>
           <div class="task-container flex items-center">
             <!-- 调用栈 -->
             <el-tooltip effect="dark" placement="top-start">
