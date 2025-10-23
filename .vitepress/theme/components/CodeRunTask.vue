@@ -760,19 +760,20 @@ onUnmounted(() => {
         </div>
       </el-scrollbar>
     </div>
+    <!-- 重置提示 -->
+    <el-dialog v-model="dialogVisible" width="400px" title="确认重置吗？">
+      <span>运行已结束，重新开始请先重置。</span>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="dialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="handleResetConfirm">
+            确认重置
+          </el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
-  <!-- 重置提示 -->
-  <el-dialog v-model="dialogVisible" width="400px" title="确认重置吗？">
-    <span>运行已结束，重新开始请先重置。</span>
-    <template #footer>
-      <div class="dialog-footer">
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleResetConfirm">
-          确认重置
-        </el-button>
-      </div>
-    </template>
-  </el-dialog>
+
 </template>
 
 <style lang="less" scoped>
