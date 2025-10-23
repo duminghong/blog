@@ -338,7 +338,7 @@ const processTask = (task, time = 1000) => {
     setTimeout(() => {
       // 继续执行事件循环
       eventLoop(time)
-    }, task.runTime || 500)
+    }, 500)
   }
 
   return true;
@@ -656,7 +656,8 @@ onUnmounted(() => {
             <!-- 调用栈 -->
             <el-tooltip effect="dark" placement="top-start">
               <template #content>
-                <div class="pre">{{ MainThreadConfig.callStack.tip }}</div>
+                <div class="pre">ahahah</div>
+                <!-- <div class="pre">{{ MainThreadConfig.callStack.tip }}</div> -->
               </template>
               <h4 class="stack-title">{{ MainThreadConfig.callStack.name }}:</h4>
             </el-tooltip>
