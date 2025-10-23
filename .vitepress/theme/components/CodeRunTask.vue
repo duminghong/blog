@@ -634,7 +634,7 @@ onUnmounted(() => {
           <div class="flex_lr_m">
             <el-tooltip effect="dark" placement="top-start">
               <template #content>
-                <pre>{{ MainThreadConfig.tip }}</pre>
+                <div class="pre">{{ MainThreadConfig.tip }}</div>
               </template>
               <h3>{{ MainThreadConfig.name }}</h3>
             </el-tooltip>
@@ -655,9 +655,10 @@ onUnmounted(() => {
           <div class="task-container flex items-center">
             <!-- 调用栈 -->
             <el-tooltip effect="dark" placement="top-start">
-              <template #content>调用栈(Call
-                Stack)是JavaScript引擎(如V8)用来管理函数执行上下文的数据结构。<br />当JavaScript的同步代码在渲染主线程中执行时，函数调用会被推入调用栈，执行完毕后弹出。<br />全局上下文会在整个程序执行期间一直存在于调用栈中，所以不做展示。</template>
-              <h4 class="stack-title">调用栈:</h4>
+              <template #content>
+                <div class="pre">{{ MainThreadConfig.callStack.tip }}</div>
+              </template>
+              <h4 class="stack-title">{{ MainThreadConfig.callStack.name }}:</h4>
             </el-tooltip>
             <el-scrollbar class="flex1">
               <div class="stack-list flex_m gap4"
