@@ -98,7 +98,7 @@ export const MainThreadConfig = {
   tip: '渲染主线程是浏览器渲染进程中的核心线程，负责协调和管理整个渲染流程。\n它通过事件循环机制来处理各种任务，包括解析HTML/CSS、执行JavaScript、处理事件、布局和绘制等',
   callStack: {
     name: '调用栈',
-    tip: '调用栈(Call Stack)是JavaScript引擎(如V8)用来管理函数执行上下文的数据结构。\n当JavaScript的同步代码在渲染主线程中执行时，函数调用会被推入调用栈，执行完毕后弹出。\n全局上下文会在整个程序执行期间一直存在于调用栈中，所以不做展示。'
+    tip: 'diao'
   },
   color: Colors.mainThread
 }
