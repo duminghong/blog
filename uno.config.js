@@ -1,10 +1,14 @@
-import { defineConfig, presetAttributify, presetWind3, transformerVariantGroup, transformerDirectives, transformerCompileClass } from 'unocss'
+import {
+  defineConfig,
+  presetAttributify,
+  presetWind3,
+  transformerVariantGroup,
+  transformerDirectives,
+  transformerCompileClass
+} from 'unocss';
 
 export default defineConfig({
-  presets: [
-    presetAttributify(),
-    presetWind3()
-  ],
+  presets: [presetAttributify(), presetWind3()],
   transformers: [
     transformerVariantGroup(), // 包裹多个 class
     transformerDirectives(), // 在 css 里使用原子化 class
@@ -13,86 +17,86 @@ export default defineConfig({
   // 添加以下配置，确保自定义规则优先级高于预设
   rules: [
     // 尺寸相关规则
-    ['wh', { 'width': '100%', 'height': '100%' }],
-    ['w', { 'width': '100%' }],
-    ['h', { 'height': '100%' }],
-    ['w50', { 'width': '50%' }],
-    ['h50', { 'height': '50%' }],
-    ['hvh', { 'height': '100vh' }],
+    ['wh', { width: '100%', height: '100%' }],
+    ['w', { width: '100%' }],
+    ['h', { height: '100%' }],
+    ['w50', { width: '50%' }],
+    ['h50', { height: '50%' }],
+    ['hvh', { height: '100vh' }],
     ['minh', { 'min-height': '100vh' }],
-    [/^av([.\d]+)$/, ([_, num]) => ({ 'width': `${num}px`, 'height': `${num}px` })],
-    [/^size([.\d]+)$/, ([_, num]) => ({ 'width': `${num}px`, 'height': `${num}px` })],
+    [/^av([.\d]+)$/, ([_, num]) => ({ width: `${num}px`, height: `${num}px` })],
+    [/^size([.\d]+)$/, ([_, num]) => ({ width: `${num}px`, height: `${num}px` })],
 
     // 定位相关规则
-    ['rel', { 'position': 'relative' }],
-    ['abs', { 'position': 'absolute' }],
-    ['fixed', { 'position': 'fixed' }],
+    ['rel', { position: 'relative' }],
+    ['abs', { position: 'absolute' }],
+    ['fixed', { position: 'fixed' }],
     [/^zx([.\d]+)$/, ([_, num]) => ({ 'z-index': num })],
-    [/^t-([.\d]+)$/, ([_, num]) => ({ 'top': `${num}px` })],
-    [/^b-([.\d]+)$/, ([_, num]) => ({ 'bottom': `${num}px` })],
-    [/^l-([.\d]+)$/, ([_, num]) => ({ 'left': `${num}px` })],
-    [/^r-([.\d]+)$/, ([_, num]) => ({ 'right': `${num}px` })],
-    ['cm', { 'position': 'absolute', 'left': '50%', 'top': '50%', 'transform': 'translate(-50%, -50%)' }],
-    ['t0', { 'top': '0' }],
-    ['t50', { 'top': '50%' }],
-    ['t100', { 'top': '100%' }],
-    ['b0', { 'bottom': '0' }],
-    ['b50', { 'bottom': '50%' }],
-    ['b100', { 'bottom': '100%' }],
-    ['l0', { 'left': '0' }],
-    ['l50', { 'left': '50%' }],
-    ['l100', { 'left': '100%' }],
-    ['r0', { 'right': '0' }],
-    ['r50', { 'right': '50%' }],
-    ['r100', { 'right': '100%' }],
+    [/^t-([.\d]+)$/, ([_, num]) => ({ top: `${num}px` })],
+    [/^b-([.\d]+)$/, ([_, num]) => ({ bottom: `${num}px` })],
+    [/^l-([.\d]+)$/, ([_, num]) => ({ left: `${num}px` })],
+    [/^r-([.\d]+)$/, ([_, num]) => ({ right: `${num}px` })],
+    ['cm', { position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }],
+    ['t0', { top: '0' }],
+    ['t50', { top: '50%' }],
+    ['t100', { top: '100%' }],
+    ['b0', { bottom: '0' }],
+    ['b50', { bottom: '50%' }],
+    ['b100', { bottom: '100%' }],
+    ['l0', { left: '0' }],
+    ['l50', { left: '50%' }],
+    ['l100', { left: '100%' }],
+    ['r0', { right: '0' }],
+    ['r50', { right: '50%' }],
+    ['r100', { right: '100%' }],
 
     // 溢出和可见性相关规则
-    ['ovh', { 'overflow': 'hidden' }],
-    ['ova', { 'overflow': 'auto' }],
-    ['vh', { 'visibility': 'hidden' }],
-    ['vv', { 'visibility': 'visible' }],
+    ['ovh', { overflow: 'hidden' }],
+    ['ova', { overflow: 'auto' }],
+    ['vh', { visibility: 'hidden' }],
+    ['vv', { visibility: 'visible' }],
 
     // 显示相关规则
-    ['dn', { 'display': 'none' }],
-    ['db', { 'display': 'block' }],
-    ['di', { 'display': 'inline' }],
-    ['dib', { 'display': 'inline-block' }],
+    ['dn', { display: 'none' }],
+    ['db', { display: 'block' }],
+    ['di', { display: 'inline' }],
+    ['dib', { display: 'inline-block' }],
     ['box_bb', { 'box-sizing': 'border-box' }],
 
     // 浮动和清除浮动相关规则
-    ['l', { 'float': 'left' }],
-    ['r', { 'float': 'right' }],
-    ['cl', { 'clear': 'both' }],
+    ['l', { float: 'left' }],
+    ['r', { float: 'right' }],
+    ['cl', { clear: 'both' }],
 
     // 垂直居中相关规则
-    ['middle', { 'display': 'inline-block', 'vertical-align': 'middle', 'width': '0', 'height': '100%' }],
+    ['middle', { display: 'inline-block', 'vertical-align': 'middle', width: '0', height: '100%' }],
 
     // 弹性布局相关规则
-    ['flex0', { 'flex': 0, 'min-width': 0 }],
-    ['flex1', { 'flex': 1, 'min-width': 0, 'min-height': 0 }],
-    ['flex3', { 'flex': 3 }],
+    ['flex0', { flex: 0, 'min-width': 0 }],
+    ['flex1', { flex: 1, 'min-width': 0, 'min-height': 0 }],
+    ['flex3', { flex: 3 }],
     ['flex_nosize', { 'flex-shrink': 0 }],
     ['flex_autosize', { 'flex-grow': 1 }],
 
     // 透明度相关规则
-    [/^o([.\d]+)$/, ([_, num]) => ({ 'opacity': `${num / 10}` })],
+    [/^o([.\d]+)$/, ([_, num]) => ({ opacity: `${num / 10}` })],
 
     // 边框相关规则
     [/^bdr([.\d]+)$/, ([_, num]) => ({ 'border-radius': `${num}px` })],
 
     // 边距相关规则
-    [/^m([.\d]+)$/, ([_, num]) => ({ 'margin': `${num}px` })],
+    [/^m([.\d]+)$/, ([_, num]) => ({ margin: `${num}px` })],
     [/^ml([.\d]+)$/, ([_, num]) => ({ 'margin-left': `${num}px` })],
     [/^mr([.\d]+)$/, ([_, num]) => ({ 'margin-right': `${num}px` })],
     [/^mt([.\d]+)$/, ([_, num]) => ({ 'margin-top': `${num}px` })],
     [/^mb([.\d]+)$/, ([_, num]) => ({ 'margin-bottom': `${num}px` })],
-    [/^p([.\d]+)$/, ([_, num]) => ({ 'padding': `${num}px` })],
+    [/^p([.\d]+)$/, ([_, num]) => ({ padding: `${num}px` })],
     [/^pl([.\d]+)$/, ([_, num]) => ({ 'padding-left': `${num}px` })],
     [/^pr([.\d]+)$/, ([_, num]) => ({ 'padding-right': `${num}px` })],
     [/^pt([.\d]+)$/, ([_, num]) => ({ 'padding-top': `${num}px` })],
     [/^pb([.\d]+)$/, ([_, num]) => ({ 'padding-bottom': `${num}px` })],
 
-    [/^gap([.\d]+)$/, ([_, num]) => ({ 'gap': `${num}px` })],
+    [/^gap([.\d]+)$/, ([_, num]) => ({ gap: `${num}px` })],
 
     // 字体相关规则
     [/^f([.\d]+)$/, ([_, num]) => ({ 'font-size': `${num}px` })],
@@ -117,9 +121,15 @@ export default defineConfig({
     ['bk', { 'word-wrap': 'break-word' }],
     ['wb', { 'white-space': 'normal', 'word-break': 'break-all' }],
     ['wn', { 'word-break': 'normal' }],
-    ['ell', { 'white-space': 'nowrap', 'text-overflow': 'ellipsis', 'overflow': 'hidden' }],
-    ['ell_2', { 'display': '-webkit-box', '-webkit-box-orient': 'vertical', '-webkit-line-clamp': '2' }],
-    ['ell_3', { 'display': '-webkit-box', '-webkit-box-orient': 'vertical', '-webkit-line-clamp': '3' }],
+    ['ell', { 'white-space': 'nowrap', 'text-overflow': 'ellipsis', overflow: 'hidden' }],
+    [
+      'ell_2',
+      { display: '-webkit-box', '-webkit-box-orient': 'vertical', '-webkit-line-clamp': '2' }
+    ],
+    [
+      'ell_3',
+      { display: '-webkit-box', '-webkit-box-orient': 'vertical', '-webkit-line-clamp': '3' }
+    ],
     ['no_select', { 'user-select': 'none' }],
     ['text_select', { 'user-select': 'text' }],
     ['pre', { 'white-space': 'pre-wrap' }],
@@ -131,13 +141,27 @@ export default defineConfig({
     ['lh1', { 'line-height': '1' }],
 
     // 背景相关规则
-    ['bg_cover', { 'background-size': 'cover', 'background-repeat': 'no-repeat', 'background-position': 'center' }],
-    ['bg_contain', { 'background-size': 'contain', 'background-repeat': 'no-repeat', 'background-position': 'center' }],
+    [
+      'bg_cover',
+      {
+        'background-size': 'cover',
+        'background-repeat': 'no-repeat',
+        'background-position': 'center'
+      }
+    ],
+    [
+      'bg_contain',
+      {
+        'background-size': 'contain',
+        'background-repeat': 'no-repeat',
+        'background-position': 'center'
+      }
+    ],
     [/^bg_o([.\d]+)$/, ([_, num]) => ({ 'background-color': `rgba(0,0,0,${num / 10})` })],
 
     // 指针相关
-    ['cur_p', { 'cursor': 'pointer' }],
-    ['cur_not', { 'cursor': 'not-allowed' }],
+    ['cur_p', { cursor: 'pointer' }],
+    ['cur_not', { cursor: 'not-allowed' }]
   ],
   variants: [
     // 可以在这里添加变体
@@ -145,23 +169,24 @@ export default defineConfig({
   // 通过 shortcuts 将多个 class 组合成一个。该配置通常用于全局样式、主题、背景等。
   shortcuts: [
     {
-      'flex_wrap': 'flex flex-wrap',
-      'flex_end': 'flex flex-row-reverse',
-      'flex_b': 'flex items-end',
-      'flex_tb': 'flex flex-col justify-between',
-      'flex_tb-c': 'flex flex-col items-center justify-between',
-      'flex_line': 'flex flex-col',
-      'flex_line-c': 'flex flex-col items-center',
-      'flex_line-m': 'flex flex-col justify-center',
-      'flex_line_c_m': 'flex flex-col items-center justify-center',
-      'flex_line_end': 'flex flex-col-reverse',
-      'flex_lr': 'flex justify-between',
-      'flex_lr_b': 'flex justify-between items-end',
-      'flex_lr_m': 'flex justify-between items-center',
-      'flex_c_m': 'flex justify-center items-center',
-      'flex_c': 'flex justify-center',
-      'flex_m': 'flex items-center',
-    },
+      flex_wrap: 'flex flex-wrap',
+      flex_end: 'flex flex-row-reverse',
+      flex_b: 'flex items-end',
+      flex_tb: 'flex flex-col justify-between',
+      flex_tb_c: 'flex flex-col items-center justify-between',
+      flex_line: 'flex flex-col',
+      flex_line_c: 'flex flex-col items-center',
+      flex_line_m: 'flex flex-col justify-center',
+      flex_line_c_m: 'flex flex-col items-center justify-center',
+      flex_line_end: 'flex flex-col-reverse',
+      flex_line_end_c: 'flex flex-col-reverse items-center',
+      flex_lr: 'flex justify-between',
+      flex_lr_b: 'flex justify-between items-end',
+      flex_lr_m: 'flex justify-between items-center',
+      flex_c_m: 'flex justify-center items-center',
+      flex_c: 'flex justify-center',
+      flex_m: 'flex items-center'
+    }
   ],
   // 在这里添加你的自定义主题
   theme: {
@@ -170,7 +195,7 @@ export default defineConfig({
       'primary-light': 'var(--vp-c-brand-light)',
       'primary-lighter': 'var(--vp-c-brand-lighter)',
       'primary-dark': 'var(--vp-c-brand-dark)',
-      'primary-darker': 'var(--vp-c-brand-darker)',
+      'primary-darker': 'var(--vp-c-brand-darker)'
     }
-  },
-})
+  }
+});
