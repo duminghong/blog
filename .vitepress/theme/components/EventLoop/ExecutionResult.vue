@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, nextTick, watch } from 'vue';
 import { TaskName, Colors } from './config.js';
+import MyMardown from '../MyMardown.vue';
 
 const props = defineProps({
   data: {
@@ -118,7 +119,7 @@ defineExpose({
                 </el-tooltip>
               </template>
               <div class="f13 b">{{ data.task }}</div>
-              <div class="f12">{{ data.result }}</div>
+              <MyMardown class="content f12" :content="data.result" />
             </el-timeline-item>
           </el-timeline>
         </div>
@@ -308,6 +309,12 @@ defineExpose({
         backdrop-filter: blur(2px);
         z-index: 2;
       }
+    }
+  }
+  :deep(.markdown-content) {
+    .vp-doc p {
+      margin: 0;
+      line-height: inherit;
     }
   }
 }
