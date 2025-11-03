@@ -34,6 +34,7 @@
     "vitepress-sidebar": "^1.29.0"
   },
   "dependencies": {
+    "@vueuse/motion": "^3.0.3",
     "@zumer/snapdom": "^1.9.11",
     "ant-design-vue": "^4.0.0-rc.6",
     "dayjs": "^1.11.13",
