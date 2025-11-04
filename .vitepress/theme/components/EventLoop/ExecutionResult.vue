@@ -72,6 +72,9 @@ const onShowResult = (task) => {
       item.classList.remove('active');
     });
     curResult.classList.add('active');
+
+    // 代码高亮
+    setCurrentRunColor(task, true);
   }
 };
 // 鼠标移出去掉类名
@@ -108,15 +111,10 @@ defineExpose({
               :timestamp="TaskName[data.type]"
               :style="{ '--current-result-color': Colors[data.type].bg }"
               placement="top"
+              @mouseenter="setCurrentRunColor(data)"
             >
               <template #dot>
-                <el-tooltip content="点击定位" placement="top">
-                  <div
-                    class="result-content-dot"
-                    :style="{ color: Colors[data.type].text }"
-                    @click="setCurrentRunColor(data, true)"
-                  ></div>
-                </el-tooltip>
+                <div class="result-content-dot" :style="{ color: Colors[data.type].text }"></div>
               </template>
               <div class="f13 b">{{ data.task }}</div>
               <MyMardown class="content f12" :content="data.result" />
@@ -137,11 +135,7 @@ defineExpose({
               @mouseleave="removeResultClass"
             >
               <div>{{ task.console }}</div>
-              <div
-                class="line"
-                v-if="task.codeNumbers && task.codeNumbers.length > 0"
-                @click="setCurrentRunColor(task, true)"
-              >
+              <div class="line" v-if="task.codeNumbers && task.codeNumbers.length > 0">
                 行号:{{ task.codeNumbers.join(',') }}
               </div>
             </div>
@@ -276,9 +270,10 @@ defineExpose({
     }
     .el-timeline-item {
       margin: 0;
-
+      cursor: pointer;
       // 激活项，添加投影
-      &.active {
+      &.active,
+      &:hover {
         z-index: 2;
         &::before {
           content: '';
