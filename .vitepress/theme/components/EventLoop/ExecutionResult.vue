@@ -74,7 +74,7 @@ const onShowResult = (task) => {
     curResult.classList.add('active');
 
     // 代码高亮
-    setCurrentRunColor(task, true);
+    setCurrentRunColor(task);
   }
 };
 // 鼠标移出去掉类名
@@ -135,7 +135,11 @@ defineExpose({
               @mouseleave="removeResultClass"
             >
               <div>{{ task.console }}</div>
-              <div class="line" v-if="task.codeNumbers && task.codeNumbers.length > 0">
+              <div
+                class="line"
+                v-if="task.codeNumbers && task.codeNumbers.length > 0"
+                @click="setCurrentRunColor(task, true)"
+              >
                 行号:{{ task.codeNumbers.join(',') }}
               </div>
             </div>
