@@ -6,7 +6,8 @@ import {
   EventLoopTypes,
   MainThreadConfig,
   MicrotaskQueueConfig,
-  TaskQueueConfig
+  TaskQueueConfig,
+  TaskName
 } from './config.js';
 
 const props = defineProps({
@@ -53,6 +54,9 @@ const setSourceRef = (el, id) => {
   if (el) sourceElements[id] = el;
 };
 
+// 任务结果区域引用
+const taskResultRef = ref(null);
+
 // 移动元素到目标位置
 const moveToTarget = async (source, target, isOneself = false) => {
   if (!source || !target) return;
@@ -72,13 +76,16 @@ const moveToTarget = async (source, target, isOneself = false) => {
   // 创建克隆元素用于动画，如果要移动自身，就克隆自己，否则克隆源元素
   const clone = isOneself ? targetDomEl.cloneNode(true) : sourceDomEl.cloneNode(true);
 
+  const cloneWidth = isOneself ? targetRect.width : sourceRect.width;
+  const cloneHeight = isOneself ? targetRect.height : sourceRect.height;
+
   // 设置克隆元素的样式
   clone.style.cssText = `
     position: absolute;
-    left: ${sourceRect.left - componentRect.left}px;
-    top: ${sourceRect.top - componentRect.top}px;
-    width: ${isOneself ? targetRect.width : sourceRect.width}px;
-    height: ${isOneself ? targetRect.height : sourceRect.height}px;
+    left: ${sourceRect.left - componentRect.left + (isOneself ? sourceRect.width - 9 : 0)}px;
+    top: ${sourceRect.top - componentRect.top - (isOneself ? sourceRect.height - 9 : 0)}px;
+    width: ${cloneWidth}px;
+    height: ${cloneHeight}px;
     z-index: 9999;
     pointer-events: none;
   `;
@@ -147,6 +154,21 @@ const moveToTaskQueue = async (task, createTask) => {
   targetEl.style.opacity = 0;
   await moveToTarget(sourceEl, targetEl, true);
   targetEl.style.opacity = 1;
+};
+
+// 任务结果显示
+const showTaskResult = (task) => {
+  if (!taskResultRef.value) return;
+  // 创建结果元素
+  const resultDom = document.createElement('div');
+  resultDom.classList.add('result');
+  resultDom.textContent = `创建${TaskName[task.type]} ${task.taskName}`;
+  resultDom.style.color = Colors[task.type].text;
+  // 追加到结果区域
+  taskResultRef.value.appendChild(resultDom);
+  setTimeout(() => {
+    taskResultRef.value.removeChild(resultDom);
+  }, task.runTime || 1000);
 };
 
 // 事件循环模拟
@@ -239,6 +261,8 @@ const runTask = async (task) => {
     const { taskId, type } = task.createTask;
     const createTask = props.taskData.find((item) => item.id === taskId);
     if (createTask) {
+      // 显示任务结果
+      showTaskResult(createTask);
       addTask(createTask, true);
       // 移动到任务队列
       await moveToTaskQueue(task, createTask);
@@ -617,7 +641,7 @@ defineExpose({
           <h4 class="stack-title">{{ MainThreadConfig.callStack.name }}:</h4>
         </el-tooltip>
         <div
-          class="stack-list"
+          class="stack-list rel"
           :style="{ backgroundColor: Colors.mainThread.bg, color: Colors.mainThread.text }"
         >
           <el-scrollbar>
@@ -629,18 +653,29 @@ defineExpose({
                 v-for="(task, index) in mainThread.callStack"
                 :key="index"
               >
-                <el-tag
-                  effect="dark"
-                  :color="Colors[task.type]?.text"
-                  :style="{ borderColor: Colors[task.type]?.text }"
-                  disable-transitions
+                <el-badge
+                  value="···"
+                  :hidden="
+                    !task.createTask ||
+                    !task.createTask.type ||
+                    mainThread.currentTask.id === task.id
+                  "
+                  :color="task.createTask ? Colors[task.createTask.type]?.text : 'transparent'"
                 >
-                  {{ task.taskName }}
-                </el-tag>
+                  <el-tag
+                    effect="dark"
+                    :color="Colors[task.type]?.text"
+                    :style="{ borderColor: Colors[task.type]?.text }"
+                    disable-transitions
+                  >
+                    {{ task.taskName }}
+                  </el-tag>
+                </el-badge>
               </div>
               <div class="mover-target" ref="moveStackTargetRef"></div>
             </div>
           </el-scrollbar>
+          <div class="task-result abs l0 t0 w" ref="taskResultRef"></div>
         </div>
       </div>
 
@@ -679,22 +714,29 @@ defineExpose({
                 color: Colors.synchronous.text
               }"
             >
-              <div class="flex_m gap4">
+              <div class="flex_m gap4 p8 pt9">
                 <div
                   class="taskbox flex"
+                  :class="{ mr12: task.createTask && task.createTask.type }"
                   :ref="(el) => setSourceRef(el, 'synchronous' + task.id)"
                   v-for="task in synchronousTaskQueue.tasks"
                   :key="task.id"
                 >
-                  <el-tag
-                    effect="dark"
-                    :color="Colors[task.type].text"
-                    :class="`task-${task.status}`"
-                    :style="{ borderColor: Colors.synchronous.border }"
-                    disable-transitions
+                  <el-badge
+                    value="···"
+                    :hidden="!task.createTask || !task.createTask.type"
+                    :color="task.createTask ? Colors[task.createTask.type]?.text : 'transparent'"
                   >
-                    {{ task.taskName }}
-                  </el-tag>
+                    <el-tag
+                      effect="dark"
+                      :color="Colors[task.type].text"
+                      :class="`task-${task.status}`"
+                      :style="{ borderColor: Colors.synchronous.border }"
+                      disable-transitions
+                    >
+                      {{ task.taskName }}
+                    </el-tag>
+                  </el-badge>
                 </div>
               </div>
             </el-scrollbar>
@@ -720,22 +762,29 @@ defineExpose({
                 color: MicrotaskQueueConfig.color.text
               }"
             >
-              <div class="flex_m gap4">
+              <div class="flex_m gap4 p8 pt9">
                 <div
                   class="taskbox flex"
+                  :class="{ mr12: task.createTask && task.createTask.type }"
                   :ref="(el) => setSourceRef(el, 'microtask' + task.id)"
                   v-for="task in microtaskQueue.tasks"
                   :key="task.id"
                 >
-                  <el-tag
-                    effect="dark"
-                    :color="Colors[task.type].text"
-                    :class="`task-${task.status}`"
-                    :style="{ borderColor: MicrotaskQueueConfig.color.border }"
-                    disable-transitions
+                  <el-badge
+                    value="···"
+                    :hidden="!task.createTask || !task.createTask.type"
+                    :color="task.createTask ? Colors[task.createTask.type]?.text : 'transparent'"
                   >
-                    {{ task.taskName }}
-                  </el-tag>
+                    <el-tag
+                      effect="dark"
+                      :color="Colors[task.type].text"
+                      :class="`task-${task.status}`"
+                      :style="{ borderColor: MicrotaskQueueConfig.color.border }"
+                      disable-transitions
+                    >
+                      {{ task.taskName }}
+                    </el-tag>
+                  </el-badge>
                 </div>
               </div>
             </el-scrollbar>
@@ -774,22 +823,29 @@ defineExpose({
                 class="queue-content"
                 :style="{ backgroundColor: Colors[key].bg, color: Colors[key].text }"
               >
-                <div class="flex_m gap4">
+                <div class="flex_m gap4 p8 pt9">
                   <div
                     class="taskbox flex"
+                    :class="{ mr12: task.createTask && task.createTask.type }"
                     :ref="(el) => setSourceRef(el, key + task.id)"
                     v-for="task in queue.tasks"
                     :key="task.id"
                   >
-                    <el-tag
-                      effect="dark"
-                      :color="Colors[task.type].text"
-                      :class="`task-${task.status}`"
-                      :style="{ borderColor: Colors[key].border }"
-                      disable-transitions
+                    <el-badge
+                      value="···"
+                      :hidden="!task.createTask || !task.createTask.type"
+                      :color="task.createTask ? Colors[task.createTask.type]?.text : 'transparent'"
                     >
-                      {{ task.taskName }}
-                    </el-tag>
+                      <el-tag
+                        effect="dark"
+                        :color="Colors[task.type].text"
+                        :class="`task-${task.status}`"
+                        :style="{ borderColor: Colors[key].border }"
+                        disable-transitions
+                      >
+                        {{ task.taskName }}
+                      </el-tag>
+                    </el-badge>
                   </div>
                 </div>
               </el-scrollbar>
@@ -797,7 +853,7 @@ defineExpose({
           </div>
           <div class="queues-list o3" v-else>
             <div class="queue-item">
-              <div class="queue-content f12 flex_m">当前无宏任务</div>
+              <div class="queue-content f12 flex_m p8">当前无宏任务</div>
             </div>
           </div>
         </div>
@@ -861,8 +917,7 @@ defineExpose({
       }
 
       .queue-content {
-        height: 42px;
-        padding: @spacing-small;
+        height: 44px;
         border: 1px solid;
         border-radius: @border-radius;
         background-color: #fff;
@@ -928,6 +983,16 @@ defineExpose({
           color: @success-color;
         }
       }
+      .task-result {
+        :deep(.result) {
+          position: absolute;
+          width: 100%;
+          left: 0;
+          text-align: center;
+          font-size: 10px;
+          animation: resultUp 0.2s ease-in both;
+        }
+      }
 
       :deep(.el-scrollbar__view) {
         min-height: 100%;
@@ -967,6 +1032,18 @@ defineExpose({
     border-top: 0;
     display: flex;
     flex-direction: column;
+  }
+}
+
+// 任务结果动画
+@keyframes resultUp {
+  0% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 </style>
