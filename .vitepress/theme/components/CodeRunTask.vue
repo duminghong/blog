@@ -384,6 +384,12 @@ onUnmounted(() => {
         display: flex;
       }
     }
+    .fullscreen {
+      &-container {
+        display: flex;
+        flex-direction: column;
+      }
+    }
   }
 }
 </style>
