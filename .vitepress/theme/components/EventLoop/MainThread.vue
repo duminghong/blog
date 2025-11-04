@@ -104,9 +104,9 @@ const moveToTarget = async (source, target, isOneself = false) => {
       opacity: 1
     },
     move: {
-      // 计算目标位置 - 基于componentDomEl的相对定位
-      x: targetRect.left - sourceRect.left,
-      y: targetRect.top - sourceRect.top,
+      // 计算目标位置
+      x: targetRect.left - sourceRect.left - (isOneself ? sourceRect.width - 9 : 0),
+      y: targetRect.top - sourceRect.top + (isOneself ? sourceRect.height - 9 : 0),
       opacity: 0.8,
       transition: {
         duration: 200,
