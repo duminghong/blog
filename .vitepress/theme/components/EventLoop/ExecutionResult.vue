@@ -204,6 +204,13 @@ defineExpose({
         background-color: #fff;
       }
     }
+
+    .content {
+      :deep(p) {
+        margin: 0;
+        line-height: inherit;
+      }
+    }
   }
   // 调试数据
   .console-section {
@@ -309,12 +316,6 @@ defineExpose({
         backdrop-filter: blur(2px);
         z-index: 2;
       }
-    }
-  }
-  :deep(.markdown-content) {
-    .vp-doc p {
-      margin: 0;
-      line-height: inherit;
     }
   }
 }
