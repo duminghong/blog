@@ -69,7 +69,6 @@ const moveToTarget = async (source, target, isOneself = false) => {
     targetDomEl.style.height = `${sourceRect.height}px`;
   }
   const targetRect = targetDomEl.getBoundingClientRect();
-  console.log('targetRect', targetRect);
   // 创建克隆元素用于动画，如果要移动自身，就克隆自己，否则克隆源元素
   const clone = isOneself ? targetDomEl.cloneNode(true) : sourceDomEl.cloneNode(true);
 
@@ -139,14 +138,11 @@ const moveToCallStack = async (task) => {
 
 // 从调用栈移动任务到任务队列
 const moveToTaskQueue = async (task, createTask) => {
-  console.log(task);
   await nextTick();
   // 获取源元素
   const sourceEl = sourceElements['callStack' + task.id];
   // 目标元素 - 任务队列
   const targetEl = sourceElements[createTask.type + createTask.id];
-  console.log('sourceEl', sourceEl);
-  console.log('targetEl', targetEl);
   if (!sourceEl || !targetEl) return;
   targetEl.style.opacity = 0;
   await moveToTarget(sourceEl, targetEl, true);
@@ -591,7 +587,7 @@ defineExpose({
 </script>
 
 <template>
-  <div class="main-thread rel mb20" :class="{ 'is-fullscreen': isFullscreen }" ref="mainThreadRef">
+  <div class="main-thread rel pb20" :class="{ 'is-fullscreen': isFullscreen }" ref="mainThreadRef">
     <div class="thread-title flex_lr_m">
       <el-tooltip
         effect="dark"
@@ -967,9 +963,6 @@ defineExpose({
 
   // 全屏状态
   &.is-fullscreen {
-    flex: 1;
-    min-height: 0;
-    min-width: 0;
     height: auto;
     border-top: 0;
     display: flex;
