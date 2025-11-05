@@ -100,24 +100,44 @@ defineExpose({
     v-if="data.length > 0"
   >
     <div class="execution-result-title b">执行结果</div>
+    <div class="execution-result-history flex flex-wrap gap4 p8">
+      <div
+        class="taskbox flex cur_p"
+        v-for="task in data"
+        :key="task.id"
+        @mouseenter="onShowResult(task)"
+        @mouseleave="removeResultClass"
+      >
+        <el-tooltip effect="dark" :content="task.task" raw-content placement="top">
+          <el-tag
+            effect="dark"
+            :color="Colors[task.type].text"
+            :style="{ borderColor: Colors[task.type].border }"
+            disable-transitions
+          >
+            {{ task.taskName }}
+          </el-tag>
+        </el-tooltip>
+      </div>
+    </div>
     <div class="execution-result-box flex flex1">
       <div class="result-content flex1 flex_line">
         <div class="result-content-title">执行线</div>
         <div class="result-content-timeline flex1" ref="resultContentRef">
           <el-timeline style="max-width: 600px">
             <el-timeline-item
-              v-for="data in data"
-              :key="data.id"
-              :timestamp="TaskName[data.type]"
-              :style="{ '--current-result-color': Colors[data.type].bg }"
+              v-for="task in data"
+              :key="task.id"
+              :timestamp="TaskName[task.type]"
+              :style="{ '--current-result-color': Colors[task.type].bg }"
               placement="top"
-              @mouseenter="setCurrentRunColor(data)"
+              @mouseenter="setCurrentRunColor(task)"
             >
               <template #dot>
-                <div class="result-content-dot" :style="{ color: Colors[data.type].text }"></div>
+                <div class="result-content-dot" :style="{ color: Colors[task.type].text }"></div>
               </template>
-              <div class="f13 b">{{ data.task }}</div>
-              <MyMardown class="content f12" :content="data.result" />
+              <div class="f13 b">{{ task.task }}</div>
+              <MyMardown class="content f12" :content="task.result" />
             </el-timeline-item>
           </el-timeline>
         </div>
