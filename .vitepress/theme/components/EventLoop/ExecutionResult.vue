@@ -322,7 +322,7 @@ defineExpose({
         }
       }
     }
-    // 蒙版-毛玻璃
+    // 蒙版-毛玻璃马赛克
     &.active {
       position: relative;
       &::before {
@@ -332,7 +332,9 @@ defineExpose({
         left: 0;
         width: 100%;
         height: 100%;
-        backdrop-filter: blur(2px);
+        background-image: radial-gradient(transparent 1px, rgba(255, 255, 255, 0.3) 1px);
+        background-size: 4px 4px;
+        backdrop-filter: saturate(50%) blur(2px);
         z-index: 2;
       }
     }
