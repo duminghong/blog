@@ -672,7 +672,7 @@ defineExpose({
                   </el-tag>
                 </el-badge>
               </div>
-              <div class="mover-target" ref="moveStackTargetRef"></div>
+              <div class="mover-target p4" ref="moveStackTargetRef"></div>
             </div>
           </el-scrollbar>
           <div class="task-result abs l0 t0 w" ref="taskResultRef"></div>
@@ -731,7 +731,7 @@ defineExpose({
                       effect="dark"
                       :color="Colors[task.type].text"
                       :class="`task-${task.status}`"
-                      :style="{ borderColor: Colors.synchronous.border }"
+                      :style="{ borderColor: Colors[task.type].border }"
                       disable-transitions
                     >
                       {{ task.taskName }}
@@ -897,8 +897,9 @@ defineExpose({
   }
 
   .mover-target {
-    height: 24px;
+    box-sizing: border-box;
     min-width: 1px;
+    border: 2px solid transparent;
   }
   .queue-section {
     margin-top: @spacing-medium;
