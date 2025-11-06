@@ -43,6 +43,9 @@ const taskData = computed(() => {
   return data.value.runSteps || [];
 });
 
+// 事件循环模拟开关
+const isOpenSimulator = ref(false);
+
 // 组件根元素引用，用于全屏功能
 const componentRef = ref(null);
 // 全屏状态
@@ -166,8 +169,12 @@ onUnmounted(() => {
   <ClientOnly>
     <div class="codeRunTask" ref="componentRef">
       <div class="codeRunTask-header flex_lr_m">
-        <div>{{ title || '事件循环模拟' }}</div>
-        <div class="flex gap10">
+        <div class="flex_m">
+          <div class="mr-2">{{ title || '事件循环模拟' }}</div>
+          <el-switch v-model="isOpenSimulator" />
+        </div>
+
+        <div class="flex gap10" v-if="isOpenSimulator">
           <button
             class="codeRunTask-header-btn-run"
             @click="mainThreadRef?.toggleRunPause()"
@@ -204,8 +211,9 @@ onUnmounted(() => {
           ref="executionCodeRef"
           :data="highlightedCodeBase64"
           :is-fullscreen="isFullscreen"
+          :is-simulator="isOpenSimulator"
         />
-        <div class="fullscreen-container flex1">
+        <div class="fullscreen-container flex1" v-if="isOpenSimulator">
           <!-- 事件循环可视化 -->
           <MainThread
             ref="mainThreadRef"

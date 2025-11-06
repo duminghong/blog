@@ -4,11 +4,18 @@ import { decodeBase64, decodeBase64ToJson } from '../../utils/index.js';
 import { Colors } from './config.js';
 
 const props = defineProps({
+  // 高亮代码Base64字符串
   data: {
     type: String,
     default: ''
   },
+  // 是否为全屏
   isFullscreen: {
+    type: Boolean,
+    default: false
+  },
+  // 是否为事件循环模拟
+  isSimulator: {
     type: Boolean,
     default: false
   }
@@ -103,7 +110,7 @@ defineExpose({
 
 <template>
   <div class="execution-code" :class="{ 'is-fullscreen': isFullscreen }">
-    <el-scrollbar ref="scrollbarRef">
+    <el-scrollbar ref="scrollbarRef" :height="isSimulator ? '400px' : 'auto'">
       <div v-html="codeHtml" ref="codeContentRef"></div>
     </el-scrollbar>
   </div>
@@ -112,7 +119,6 @@ defineExpose({
 <style lang="less" scoped>
 @border-color: #e1e4e8;
 .execution-code {
-  height: 400px;
   background-color: var(--vp-code-block-bg);
 
   // 重置样式
