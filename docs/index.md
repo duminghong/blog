@@ -4,9 +4,12 @@ layout: home
 layoutClass: 'home-layout'
 
 hero:
-  name: "DUMINGHONG"
-  text: "我不二，我很纯洁"
+  name: 'DUMINGHONG'
+  text: '我不二，我很纯洁'
   tagline: 一个持续学习的前端，记录学习，分享生活
+  image:
+    src: /assets/img/task.gif
+    alt: EventLoop
   actions:
     - theme: brand
       text: 🚀 教程分享
@@ -18,5 +21,12 @@ hero:
       text: ⛑️ 工作记录
       link: /works/
 ---
+
 <!-- 自定义 features 组件，取最近更新的3条文章 -->
 <Features />
+
+<style scoped>
+.image-bg {
+  background-color: #f5f5f5;
+}
+</style>
