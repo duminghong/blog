@@ -8,7 +8,7 @@ hero:
   text: '我不二，我很纯洁'
   tagline: 一个持续学习的前端，记录学习，分享生活
   image:
-    src: ./assets/img/task.gif
+    src: /task.gif
     alt: EventLoop
   actions:
     - theme: brand
