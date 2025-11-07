@@ -110,7 +110,10 @@ defineExpose({
 
 <template>
   <div class="execution-code" :class="{ 'is-fullscreen': isFullscreen }">
-    <el-scrollbar ref="scrollbarRef" :height="isSimulator ? '400px' : 'auto'">
+    <el-scrollbar
+      ref="scrollbarRef"
+      :height="isSimulator ? (isFullscreen ? 'auto' : '400px') : 'auto'"
+    >
       <div v-html="codeHtml" ref="codeContentRef"></div>
     </el-scrollbar>
   </div>
