@@ -279,7 +279,7 @@ const getNextMacrotask = () => {
     .sort((a, b) => TaskQueueConfig[a].priority - TaskQueueConfig[b].priority);
   if (queues.length > 0) {
     moveToCallStack(macrotaskQueue[queues[0]].tasks[0]);
-    macrotaskQueue[queues[0]].tasks.shift();
+    return macrotaskQueue[queues[0]].tasks.shift();
   }
   return null;
 };
@@ -795,11 +795,11 @@ defineExpose({
           <div class="flex">
             <el-tooltip
               effect="dark"
-              content="消息队列(宏任务队列)是浏览器用于存储待处理任务(消息)的队列<br>当执行完微队列中的所有任务后，会从队列中取出一个任务执行。"
+              content="宏任务队列(消息队列)是浏览器用于存储待处理任务(消息)的队列<br>当执行完微队列中的所有任务后，会从队列中取出一个任务执行。"
               raw-content
               placement="top-start"
             >
-              <div class="queue-section-title b">消息队列（宏队列）</div>
+              <div class="queue-section-title b">宏队列（消息队列）</div>
             </el-tooltip>
           </div>
           <div class="queues-list" v-if="Object.keys(macrotaskQueue).length > 0">
@@ -820,7 +820,7 @@ defineExpose({
               </div>
 
               <el-scrollbar
-                class="queue-content"
+                class="queue-content flex1"
                 :style="{ backgroundColor: Colors[key].bg, color: Colors[key].text }"
               >
                 <div class="flex_m gap4 p8 pt9">
