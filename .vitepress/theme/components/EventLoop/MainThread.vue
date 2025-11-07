@@ -638,7 +638,7 @@ defineExpose({
           :content="MainThreadConfig.callStack.tip.replace(/\n/g, '<br>')"
           raw-content
         >
-          <h4 class="stack-title">{{ MainThreadConfig.callStack.name }}:</h4>
+          <div class="stack-title b">{{ MainThreadConfig.callStack.name }}:</div>
         </el-tooltip>
         <div
           class="stack-list rel"
@@ -938,11 +938,8 @@ defineExpose({
 
     // 调用栈
     .stack-title {
-      width: 70px;
-      font-weight: bold;
-      margin: 0;
       font-size: 14px;
-      font-weight: 600;
+      line-height: 40px;
       cursor: pointer;
     }
 
