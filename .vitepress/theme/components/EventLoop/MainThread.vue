@@ -38,6 +38,13 @@ const runTypes = computed(() => {
   const list = props.taskData.map((item) => item.type);
   return [...new Set(list)];
 });
+// 运行任务列表
+const runTasks = computed(() => {
+  return props.taskData.map((task) => ({
+    ...task,
+    deleteCallStack: task.deleteCallStack || [task.id]
+  }));
+});
 
 // 执行历史记录
 const executionHistory = ref([]);
@@ -259,7 +266,7 @@ const runTask = async (task) => {
   // 是否创建任务
   if (task.createTask && task.createTask.type) {
     const { taskId, type } = task.createTask;
-    const createTask = props.taskData.find((item) => item.id === taskId);
+    const createTask = runTasks.value.find((item) => item.id === taskId);
     if (createTask) {
       // 显示任务结果
       showTaskResult(
@@ -307,12 +314,9 @@ const initRun = (time = 1000) => {
     mainThread.callStack.push(initTask);
   }
   // 初始化同步任务队列
-  const synchronousTasks = props.taskData
-    .map((item) => ({
-      ...item,
-      deleteCallStack: item.deleteCallStack || [item.id]
-    }))
-    .filter((task) => task.type === EventLoopTypes.SYNCHRONOUS);
+  const synchronousTasks = runTasks.value.filter(
+    (task) => task.type === EventLoopTypes.SYNCHRONOUS
+  );
   // 检查是否还有同步任务
   if (currentTaskIndex.value >= synchronousTasks.length) {
     // 所有同步任务准备完毕
