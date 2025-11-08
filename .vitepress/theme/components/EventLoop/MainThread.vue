@@ -157,18 +157,18 @@ const moveToTaskQueue = async (task, createTask) => {
 };
 
 // 任务结果显示
-const showTaskResult = (task) => {
+const showTaskResult = (content, type, time = 1000) => {
   if (!taskResultRef.value) return;
   // 创建结果元素
   const resultDom = document.createElement('div');
   resultDom.classList.add('result');
-  resultDom.textContent = `创建${TaskName[task.type]} ${task.taskName}`;
-  resultDom.style.color = Colors[task.type].text;
+  resultDom.textContent = content;
+  resultDom.style.color = Colors[type].text;
   // 追加到结果区域
   taskResultRef.value.appendChild(resultDom);
   setTimeout(() => {
     taskResultRef.value.removeChild(resultDom);
-  }, task.runTime || 1000);
+  }, time);
 };
 
 // 事件循环模拟
@@ -262,7 +262,11 @@ const runTask = async (task) => {
     const createTask = props.taskData.find((item) => item.id === taskId);
     if (createTask) {
       // 显示任务结果
-      showTaskResult(createTask);
+      showTaskResult(
+        `创建${TaskName[createTask.type]} ${createTask.taskName}`,
+        createTask.type,
+        createTask.runTime
+      );
       addTask(createTask, true);
       // 移动到任务队列
       await moveToTaskQueue(task, createTask);
@@ -293,8 +297,8 @@ const initRun = (time = 1000) => {
       type: EventLoopTypes.SYNCHRONOUS,
       codeNumbers: [],
       task: '初始化',
-      taskName: '全局上下文',
-      result: '按序执行同步任务，全局上下文入栈'
+      taskName: '全局执行上下文',
+      result: '按序执行同步任务，全局执行上下文入栈'
     };
     // 添加初始化结果
     emit('update:result', [...props.result, initTask]);
@@ -387,6 +391,7 @@ const processTask = (task, time = 1000) => {
   setTimeout(() => {
     mainThread.callStack.push(task);
   }, 200);
+
   // 如果不是单步模式，则使用setTimeout继续执行
   if (!mainThread.isStepMode) {
     setTimeout(() => {
@@ -414,24 +419,28 @@ const eventLoop = async (time = 1000) => {
   if (mainThread.callStack.length > 1) {
     // 执行调用栈中的任务（后进先出）
     const callStackTask = mainThread.callStack[mainThread.callStack.length - 1];
-    if (callStackTask) {
+
+    // 检查任务是否已完成
+    if (callStackTask && callStackTask.status !== 'completed') {
       // 保存当前状态到历史记录
       saveStateToHistory();
 
       // 设置当前任务状态为运行中
       runTask(callStackTask);
+
       setTimeout(() => {
-        // 执行完成，从调用栈中弹出当前任务
-        mainThread.callStack.pop();
-        // 设置当前任务状态为已完成
         callStackTask.status = 'completed';
+
+        // 任务执行完成后，根据deleteCallStack数组处理调用栈的弹出
+        processCallStackDeletion(callStackTask);
+
         // 如果不是单步模式，继续执行下一个任务
         if (!mainThread.isStepMode) {
           eventLoop(time);
         }
       }, callStackTask.runTime || 500);
+      return;
     }
-    return;
   }
 
   // 2. 处理同步任务队列（按代码顺序执行）
@@ -585,6 +594,31 @@ const scrollCodeTop = (top) => {
 // 设置当前运行代码的背景色
 const changeCodeRunColor = (task) => {
   emit('changeCodeRunColor', task);
+};
+
+// 根据deleteCallStack数组处理调用栈的弹出
+const processCallStackDeletion = (task) => {
+  if (!task || !task.deleteCallStack || !Array.isArray(task.deleteCallStack)) {
+    return;
+  }
+  // 从调用栈中删除指定的任务
+  task.deleteCallStack.forEach((id) => {
+    const index = mainThread.callStack.findIndex((task) => task.id == id);
+    if (index !== -1) {
+      const deleteTask = mainThread.callStack[index];
+      // 删除自己
+      if (task.id === id) {
+        mainThread.callStack.splice(index, 1);
+      } else {
+        // 不是删除自己，延时处理
+        setTimeout(() => {
+          // 提示
+          showTaskResult(`${deleteTask.taskName}出栈`, deleteTask.type, 2000);
+          mainThread.callStack.splice(index, 1);
+        }, (deleteTask.runTime || 1000) / 2);
+      }
+    }
+  });
 };
 
 // 计算是否可以执行下一步
