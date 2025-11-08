@@ -307,9 +307,12 @@ const initRun = (time = 1000) => {
     mainThread.callStack.push(initTask);
   }
   // 初始化同步任务队列
-  const synchronousTasks = props.taskData.filter(
-    (task) => task.type === EventLoopTypes.SYNCHRONOUS
-  );
+  const synchronousTasks = props.taskData
+    .map((item) => ({
+      ...item,
+      deleteCallStack: item.deleteCallStack || [item.id]
+    }))
+    .filter((task) => task.type === EventLoopTypes.SYNCHRONOUS);
   // 检查是否还有同步任务
   if (currentTaskIndex.value >= synchronousTasks.length) {
     // 所有同步任务准备完毕
