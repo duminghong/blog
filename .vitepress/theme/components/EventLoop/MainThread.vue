@@ -6,9 +6,12 @@ import {
   EventLoopTypes,
   MainThreadConfig,
   MicrotaskQueueConfig,
+  RenderingQueueConfig,
   TaskQueueConfig,
   TaskName
 } from './config.js';
+
+import Task from './Task.vue';
 
 const props = defineProps({
   taskData: {
@@ -209,6 +212,11 @@ Object.keys(TaskQueueConfig).forEach((key) => {
   }
 });
 
+// 渲染队列 - 存储渲染任务，清空微任务队列后，如果需要进行渲染，进入渲染阶段
+const renderQueue = reactive({
+  tasks: []
+});
+
 // 事件循环控制方法
 // 任务类型与处理器的映射
 const taskHandlers = {
@@ -218,6 +226,10 @@ const taskHandlers = {
   },
   [EventLoopTypes.MICROTASK]: (task) => {
     microtaskQueue.tasks.push(task);
+    return true;
+  },
+  [EventLoopTypes.RENDERING]: (task) => {
+    renderQueue.tasks.push(task);
     return true;
   }
 };
@@ -232,7 +244,7 @@ const addTask = (task, isCreate = false) => {
   // 设置当前运行代码的背景色
   !isCreate && changeCodeRunColor(task);
 
-  // 如果是同步任务或微任务，使用对应的处理器
+  // 如果是同步任务、微任务、渲染任务，使用对应的处理器
   if (taskHandlers[task.type]) {
     return taskHandlers[task.type](task);
   }
@@ -375,6 +387,7 @@ const saveStateToHistory = () => {
     synchronousTaskQueue: [...synchronousTaskQueue.tasks],
     microtaskQueue: [...microtaskQueue.tasks],
     macrotaskQueue: {},
+    renderQueue: [...renderQueue.tasks],
     resultDatas: props.result ? [...props.result] : [],
     currentTaskIndex: currentTaskIndex.value
   };
@@ -468,13 +481,22 @@ const eventLoop = async (time = 1000) => {
     }
   }
 
-  // 4. 检查是否还有宏任务
+  // 4. 渲染阶段，在微任务执行完成后
+  if (renderQueue.tasks.length > 0) {
+    moveToCallStack(renderQueue.tasks[0]);
+    const renderTask = renderQueue.tasks.shift();
+    if (processTask(renderTask, time)) {
+      return;
+    }
+  }
+
+  // 5. 检查是否还有宏任务
   const nextMacrotask = getNextMacrotask();
   if (processTask(nextMacrotask, time)) {
     return;
   }
 
-  // 5. 没有任务了，事件循环结束
+  // 6. 没有任务了，事件循环结束
   mainThread.isRunning = false;
   mainThread.isStepMode = false;
   // 清空调用栈
@@ -545,6 +567,10 @@ const stepBack = () => {
   if (previousState.microtaskQueue) {
     microtaskQueue.tasks = [...previousState.microtaskQueue];
   }
+  // 恢复上一步的渲染队列
+  if (previousState.renderQueue) {
+    renderQueue.tasks = [...previousState.renderQueue];
+  }
 
   // 恢复上一步的宏任务队列
   if (previousState.macrotaskQueue) {
@@ -574,6 +600,7 @@ const stepBack = () => {
 const resetEventLoop = () => {
   currentTaskIndex.value = 0;
   microtaskQueue.tasks = [];
+  renderQueue.tasks = []; // 清空渲染队列
   synchronousTaskQueue.tasks = []; // 重置同步任务队列
   Object.values(macrotaskQueue).forEach((queue) => {
     queue.tasks = [];
@@ -694,24 +721,10 @@ defineExpose({
                 v-for="(task, index) in mainThread.callStack"
                 :key="index"
               >
-                <el-badge
-                  value="···"
-                  :hidden="
-                    !task.createTask ||
-                    !task.createTask.type ||
-                    mainThread.currentTask.id === task.id
-                  "
-                  :color="task.createTask ? Colors[task.createTask.type]?.text : 'transparent'"
-                >
-                  <el-tag
-                    effect="dark"
-                    :color="Colors[task.type]?.text"
-                    :style="{ borderColor: Colors[task.type]?.text }"
-                    disable-transitions
-                  >
-                    {{ task.taskName }}
-                  </el-tag>
-                </el-badge>
+                <Task
+                  :task="task"
+                  :hidden="mainThread.currentTask && mainThread.currentTask.id === task.id"
+                />
               </div>
               <div class="mover-target p4" ref="moveStackTargetRef"></div>
             </div>
@@ -763,21 +776,7 @@ defineExpose({
                   v-for="task in synchronousTaskQueue.tasks"
                   :key="task.id"
                 >
-                  <el-badge
-                    value="···"
-                    :hidden="!task.createTask || !task.createTask.type"
-                    :color="task.createTask ? Colors[task.createTask.type]?.text : 'transparent'"
-                  >
-                    <el-tag
-                      effect="dark"
-                      :color="Colors[task.type].text"
-                      :class="`task-${task.status}`"
-                      :style="{ borderColor: Colors[task.type].border }"
-                      disable-transitions
-                    >
-                      {{ task.taskName }}
-                    </el-tag>
-                  </el-badge>
+                  <Task :task="task" />
                 </div>
               </div>
             </el-scrollbar>
@@ -811,21 +810,41 @@ defineExpose({
                   v-for="task in microtaskQueue.tasks"
                   :key="task.id"
                 >
-                  <el-badge
-                    value="···"
-                    :hidden="!task.createTask || !task.createTask.type"
-                    :color="task.createTask ? Colors[task.createTask.type]?.text : 'transparent'"
-                  >
-                    <el-tag
-                      effect="dark"
-                      :color="Colors[task.type].text"
-                      :class="`task-${task.status}`"
-                      :style="{ borderColor: MicrotaskQueueConfig.color.border }"
-                      disable-transitions
-                    >
-                      {{ task.taskName }}
-                    </el-tag>
-                  </el-badge>
+                  <Task :task="task" />
+                </div>
+              </div>
+            </el-scrollbar>
+          </div>
+        </div>
+        <!-- 渲染队列区域 -->
+        <div class="queue-section">
+          <div class="flex">
+            <el-tooltip
+              effect="dark"
+              :content="RenderingQueueConfig.tip.replace(/\n/g, '<br>')"
+              raw-content
+              placement="top-start"
+            >
+              <div class="queue-section-title b">{{ RenderingQueueConfig.name }}</div>
+            </el-tooltip>
+          </div>
+          <div class="queue-item">
+            <el-scrollbar
+              class="queue-content"
+              :style="{
+                backgroundColor: RenderingQueueConfig.color.bg,
+                color: RenderingQueueConfig.color.text
+              }"
+            >
+              <div class="flex_m gap4 p8 pt9">
+                <div
+                  class="taskbox flex"
+                  :class="{ mr12: task.createTask && task.createTask.type }"
+                  :ref="(el) => setSourceRef(el, 'rendering' + task.id)"
+                  v-for="task in renderQueue.tasks"
+                  :key="task.id"
+                >
+                  <Task :task="task" />
                 </div>
               </div>
             </el-scrollbar>
@@ -872,21 +891,7 @@ defineExpose({
                     v-for="task in queue.tasks"
                     :key="task.id"
                   >
-                    <el-badge
-                      value="···"
-                      :hidden="!task.createTask || !task.createTask.type"
-                      :color="task.createTask ? Colors[task.createTask.type]?.text : 'transparent'"
-                    >
-                      <el-tag
-                        effect="dark"
-                        :color="Colors[task.type].text"
-                        :class="`task-${task.status}`"
-                        :style="{ borderColor: Colors[key].border }"
-                        disable-transitions
-                      >
-                        {{ task.taskName }}
-                      </el-tag>
-                    </el-badge>
+                    <Task :task="task" />
                   </div>
                 </div>
               </el-scrollbar>
@@ -1005,6 +1010,7 @@ defineExpose({
           border-top: 5px solid transparent;
           border-bottom: 5px solid transparent;
           border-left: 10px solid currentColor;
+          z-index: 2;
         }
         &::after {
           content: '';
@@ -1017,6 +1023,7 @@ defineExpose({
           border-top: 5px solid transparent;
           border-bottom: 5px solid transparent;
           border-right: 10px solid currentColor;
+          z-index: 2;
         }
         &.active {
           color: @success-color;
