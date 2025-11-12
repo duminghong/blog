@@ -17,16 +17,17 @@ export const EventLoopTypes = {
 // 执行顺序
 // 1.首先执行调用栈中的所有同步代码
 // 2.调用栈为空后，检查微任务队列，执行所有微任务
-// 3.微任务队列为空后，从宏任务队列中取出一个任务执行
-// 4.重复步骤2-3，直到调用栈和微任务队列都为空
+// 3.执行渲染任务 （如果有必要的话）
+// 4.微任务队列为空后，从宏任务队列中取出一个任务执行
+// 5.重复步骤2-4，直到调用栈和微任务队列都为空
+// 渲染任务 （作为事件循环的一个特殊阶段，在宏任务执行完毕且微任务队列为空后执行）
 export const TaskPriority = {
   [EventLoopTypes.SYNCHRONOUS]: 0, //同步任务不是一个队列 ，是指直接执行的同步代码，优先级最高，会阻塞其他任务的执行
   [EventLoopTypes.MICROTASK]: 1,
   [EventLoopTypes.EVENT]: 2,
   [EventLoopTypes.TIMER]: 3,
   [EventLoopTypes.NETWORK]: 4,
-  [EventLoopTypes.FILE]: 5,
-  [EventLoopTypes.RENDERING]: 6
+  [EventLoopTypes.FILE]: 5
 };
 
 export const TaskName = {
@@ -167,6 +168,14 @@ export const MicrotaskQueueConfig = {
   color: Colors.microtask
 };
 
+// 渲染阶段配置
+export const RenderingQueueConfig = {
+  name: '渲染任务',
+  tip: '渲染任务作为事件循环的一个特殊阶段，在宏任务执行完毕且微任务队列为空后执行。\n浏览器会智能地合并渲染操作，避免不必要的重绘和回流',
+  type: EventLoopTypes.RENDERING,
+  color: Colors.rendering
+};
+
 // 消息队列（宏任务队列）配置
 export const TaskQueueConfig = {
   event: {
@@ -196,12 +205,5 @@ export const TaskQueueConfig = {
     priority: TaskPriority[EventLoopTypes.FILE],
     type: EventLoopTypes.FILE,
     color: Colors.file
-  },
-  rendering: {
-    name: '渲染队列',
-    tip: '渲染任务是一种特殊的宏任务，会在当前宏任务执行完毕后，浏览器有空闲时间时执行',
-    priority: TaskPriority[EventLoopTypes.RENDERING],
-    type: EventLoopTypes.RENDERING,
-    color: Colors.rendering
   }
 };
