@@ -145,7 +145,7 @@ defineExpose({
       <!-- 控制台区域 -->
       <div class="console-section">
         <div class="console-title flex_m">输出</div>
-        <el-scrollbar max-height="200px">
+        <el-scrollbar>
           <div class="console-content">
             <div
               class="console-item flex_lr_m"
@@ -156,7 +156,7 @@ defineExpose({
             >
               <div>{{ task.console }}</div>
               <div
-                class="line"
+                class="line nowrap ml4"
                 v-if="task.codeNumbers && task.codeNumbers.length > 0"
                 @click="setCurrentRunColor(task, true)"
               >
