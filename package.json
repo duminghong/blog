@@ -34,6 +34,8 @@
     "vitepress-sidebar": "^1.29.0"
   },
   "dependencies": {
+    "@babel/parser": "^7.28.5",
+    "@babel/traverse": "^7.28.5",
     "@types/dompurify": "^3.0.5",
     "@vueuse/motion": "^3.0.3",
     "@zumer/snapdom": "^1.9.11",
