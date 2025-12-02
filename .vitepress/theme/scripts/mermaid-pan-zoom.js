@@ -69,7 +69,9 @@ function createMermaidTip(container, zoomEnabled) {
   // 创建提示信息
   const tooltip = document.createElement('div');
   tooltip.className = 'mermaid-tooltip';
-  tooltip.innerText = `提示：${zoomEnabled ? '使用鼠标滚轮缩放，拖拽平移，双击重置，' : ''}右键查看更多`;
+  tooltip.innerText = `提示：${
+    zoomEnabled ? '使用鼠标滚轮缩放，拖拽平移，双击重置，' : ''
+  }右键查看更多`;
   container.appendChild(tooltip);
 
   // 返回创建的UI控件引用
@@ -100,11 +102,12 @@ function changeZoomPanState(container, zoomEnabled, panZoomInstance) {
     // 更新提示文字
     const tooltip = container.querySelector('.mermaid-tooltip');
     if (tooltip) {
-      tooltip.innerText = `提示：${zoomEnabled ? '使用鼠标滚轮缩放，拖拽平移，双击重置，' : ''}右键查看更多`;
+      tooltip.innerText = `提示：${
+        zoomEnabled ? '使用鼠标滚轮缩放，拖拽平移，双击重置，' : ''
+      }右键查看更多`;
     }
   }
 }
-
 
 /**
  * 导出Mermaid图表为PNG图片
@@ -256,7 +259,7 @@ function showContextMenu(e, container, panZoomInstance) {
       console.log('menu:remove');
       menu.remove();
     }
-  }
+  };
   const zoomReset = {
     id: 'menu-reset-view',
     text: '重置视图',
@@ -266,13 +269,13 @@ function showContextMenu(e, container, panZoomInstance) {
       }
       menu.remove();
     }
-  }
+  };
   const zoomItems = panZoomInstance ? (zoomEnabled ? [zoomSwitch, zoomReset] : [zoomSwitch]) : [];
   // 合并菜单项
   const menuItems = zoomItems.concat(basicItems);
 
   // 添加菜单项到菜单
-  menuItems.forEach(item => {
+  menuItems.forEach((item) => {
     const menuItem = document.createElement('div');
     menuItem.id = item.id;
     menuItem.textContent = item.text;
@@ -397,16 +400,17 @@ export async function setupMermaidPanZoom() {
         // 等待SVG加载完成
         ensureSvgLoaded(svgElement).then(() => {
           const panZoomInstance = svgPanZoom(svgElement, {
-            zoomEnabled: zoomEnabled,         // 启用缩放功能
+            zoomEnabled: zoomEnabled, // 启用缩放功能
             controlIconsEnabled: false, // 显示缩放控制图标
-            fit: true,                 // 自动调整图表大小以适应容器
-            center: true,              // 自动将图表居中显示在容器中
-            minZoom: 0.1,              // 最小缩放比例（原始大小的10%）
-            maxZoom: 10,               // 最大缩放比例（原始大小的10倍）
+            fit: true, // 自动调整图表大小以适应容器
+            center: true, // 自动将图表居中显示在容器中
+            minZoom: 0.1, // 最小缩放比例（原始大小的10%）
+            maxZoom: 10, // 最大缩放比例（原始大小的10倍）
             zoomScaleSensitivity: 0.2, // 鼠标滚轮缩放的敏感度
             dblClickZoomEnabled: true, // 启用双击缩放功能
             mouseWheelZoomEnabled: true, // 启用鼠标滚轮缩放功能
-            beforeZoom: function () {  // 缩放前的回调函数
+            beforeZoom: function () {
+              // 缩放前的回调函数
               // 保存原始尺寸，确保缩放不会改变容器尺寸
               return true;
             }

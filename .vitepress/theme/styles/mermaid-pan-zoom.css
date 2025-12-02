@@ -1,7 +1,7 @@
 /* Mermaid 图表缩放和平移样式 */
 .mermaid-pan-zoom-wrapper {
   position: relative;
-  overflow: hidden;
+  /* overflow: hidden; */
   border: 1px solid #eaecef;
   border-radius: 6px;
   margin: 1.5rem 0;
@@ -86,7 +86,7 @@
   width: 40px;
   height: 20px;
   border-radius: 10px;
-  background-color: #DCDFE6;
+  background-color: #dcdfe6;
   transition: background-color 0.3s;
   margin-left: 8px;
 }
@@ -98,30 +98,30 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   transition: transform 0.3s;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* 开关开启状态 */
-.mermaid-switch-input:checked+.mermaid-switch-core {
+.mermaid-switch-input:checked + .mermaid-switch-core {
   background-color: var(--vp-c-primary);
 }
 
-.mermaid-switch-input:checked+.mermaid-switch-core .mermaid-switch-button {
+.mermaid-switch-input:checked + .mermaid-switch-core .mermaid-switch-button {
   transform: translateX(20px);
 }
 
 /* 深色模式下的开关样式 */
 .dark .mermaid-switch-label {
-  color: #E5EAF3;
+  color: #e5eaf3;
 }
 
 .dark .mermaid-switch-core {
-  background-color: #4C4D4F;
+  background-color: #4c4d4f;
 }
 
-.dark .mermaid-switch-input:checked+.mermaid-switch-core {
+.dark .mermaid-switch-input:checked + .mermaid-switch-core {
   background-color: var(--vp-c-primary);
 }
 
@@ -145,14 +145,14 @@
 }
 
 /* 菜单项样式 */
-#mermaid-context-menu>div {
+#mermaid-context-menu > div {
   padding: 8px 16px;
   cursor: pointer;
   white-space: nowrap;
   margin: 0;
 }
 
-#mermaid-context-menu>div:hover {
+#mermaid-context-menu > div:hover {
   background: #f0f0f0;
 }
 
@@ -162,10 +162,10 @@
   border-color: #555;
 }
 
-.dark #mermaid-context-menu>div {
+.dark #mermaid-context-menu > div {
   color: #eee;
 }
 
-.dark #mermaid-context-menu>div:hover {
+.dark #mermaid-context-menu > div:hover {
   background: #444;
 }
