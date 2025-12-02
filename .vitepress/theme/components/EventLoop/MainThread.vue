@@ -816,8 +816,8 @@ defineExpose({
             </el-scrollbar>
           </div>
         </div>
-        <!-- 渲染队列区域 -->
-        <div class="queue-section">
+        <!-- 渲染任务列表区域 -->
+        <div class="queue-section" v-if="runTypes.includes(EventLoopTypes.RENDERING)">
           <div class="flex">
             <el-tooltip
               effect="dark"
