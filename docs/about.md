@@ -48,6 +48,9 @@ next: false
 
 [主站](https://duminghong.com/)
 
+## 联系我
+- 邮箱: [i@duminghong.com](mailto:i@duminghong.com)
+- 微信号: ```DM20210609```
 
 ## 主业
 
