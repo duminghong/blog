@@ -29,3 +29,13 @@
   border-radius: 2px;
   transition: background-color 0.25s;
 }
+
+body .active.outline-link {
+  font-weight: bold !important;
+  font-size: inherit !important; /* 改成你想要的大小 */
+  color: var(--vp-c-primary) !important;
+}
+
+.VPDocAsideOutline .arrow {
+  /* 自定义箭头样式 */
+}

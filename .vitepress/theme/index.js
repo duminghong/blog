@@ -4,6 +4,8 @@ import { h, watch } from "vue";
 
 import { MotionPlugin } from '@vueuse/motion'
 
+import OutlineCollapsePlugin from 'vitepress-outline-collapse';
+
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 
@@ -73,7 +75,8 @@ export default {
 
           // 延迟执行，确保页面内容已加载
           setTimeout(() => {
-            setupMermaidPanZoom();
+            setupMermaidPanZoom();  // 初始化 Mermaid 缩放和平移功能
+            OutlineCollapsePlugin(); // 初始化折叠功能
           }, 300);
         },
         { immediate: true },
