@@ -2,3 +2,4 @@ node_modules
 dist
 .vscode
 .vitepress/cache
+.trae/rules/git-commit-message.md
